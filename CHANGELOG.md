@@ -4,17 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.0] - YYYY-MM-DD
+## [Unreleased]
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.0...HEAD
+
+## [v2.1.0] - 2024-04-03
 
 ### Added
 
 - **Roblox Log Syncing Settings:** Added new settings `argon.logSync.enabled` (default: `true`) and `argon.logSync.targetFile` (default: `.argon/logs/session.log`) to configure syncing of Roblox Studio logs to a local file.
 - **Project Schema Update:** Added `logSync` object to the `project.json` schema for configuring log syncing per-project.
-
-## [Unreleased]
-
-### Added
-
 - New `Output` command to quickly see Argon output channel
 
 ## [2.0.18] - 2025-02-05
@@ -201,23 +199,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Initial release
 
-[unreleased]: https://github.com/argon-rbx/argon-vscode/compare/2.0.18...HEAD
-[2.0.18]: https://github.com/argon-rbx/argon-vscode/compare/2.0.17...2.0.18
-[2.0.17]: https://github.com/argon-rbx/argon-vscode/compare/2.0.16...2.0.17
-[2.0.16]: https://github.com/argon-rbx/argon-vscode/compare/2.0.15...2.0.16
-[2.0.15]: https://github.com/argon-rbx/argon-vscode/compare/2.0.14...2.0.15
-[2.0.14]: https://github.com/argon-rbx/argon-vscode/compare/2.0.13...2.0.14
-[2.0.13]: https://github.com/argon-rbx/argon-vscode/compare/2.0.12...2.0.13
-[2.0.12]: https://github.com/argon-rbx/argon-vscode/compare/2.0.11...2.0.12
-[2.0.11]: https://github.com/argon-rbx/argon-vscode/compare/2.0.10...2.0.11
-[2.0.10]: https://github.com/argon-rbx/argon-vscode/compare/2.0.9...2.0.10
-[2.0.9]: https://github.com/argon-rbx/argon-vscode/compare/2.0.8...2.0.9
-[2.0.8]: https://github.com/argon-rbx/argon-vscode/compare/2.0.7...2.0.8
-[2.0.7]: https://github.com/argon-rbx/argon-vscode/compare/2.0.6...2.0.7
-[2.0.6]: https://github.com/argon-rbx/argon-vscode/compare/2.0.5...2.0.6
-[2.0.5]: https://github.com/argon-rbx/argon-vscode/compare/2.0.4...2.0.5
-[2.0.4]: https://github.com/argon-rbx/argon-vscode/compare/2.0.3...2.0.4
-[2.0.3]: https://github.com/argon-rbx/argon-vscode/compare/2.0.2...2.0.3
-[2.0.2]: https://github.com/argon-rbx/argon-vscode/compare/2.0.1...2.0.2
-[2.0.1]: https://github.com/argon-rbx/argon-vscode/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/argon-rbx/argon-vscode/compare/87f2daec9b41b73676470d5eab01fe2fdc129cc8...2.0.0
