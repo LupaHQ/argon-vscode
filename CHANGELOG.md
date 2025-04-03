@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.1...HEAD
+
+## [v2.1.1] - 2024-04-03
+
+### Fixed
+
+- Corrected CLI installation logic to better handle permissions and macOS Gatekeeper quarantine, preventing "failed to install" errors on startup.
+- Prevented `argon serve` from being launched twice by `autoRun` logic if a session for the project was already running.
 
 ## [v2.1.0] - 2024-04-03
 
