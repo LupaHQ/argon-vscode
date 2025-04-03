@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - YYYY-MM-DD
+
+### Added
+
+- **Roblox Log Syncing Settings:** Added new settings `argon.logSync.enabled` (default: `true`) and `argon.logSync.targetFile` (default: `.argon/logs/session.log`) to configure syncing of Roblox Studio logs to a local file.
+- **Project Schema Update:** Added `logSync` object to the `project.json` schema for configuring log syncing per-project.
+
 ## [Unreleased]
 
 ### Added

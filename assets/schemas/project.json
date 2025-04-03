@@ -136,6 +136,25 @@
       "title": "Legacy Scripts",
       "description": "Use the legacy script run context"
     },
+    "logSync": {
+      "type": "object",
+      "title": "Log Sync Settings",
+      "description": "Configure syncing of Roblox Studio server logs to the local file system",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "default": true,
+          "description": "Enable or disable the log syncing feature"
+        },
+        "targetFile": {
+          "type": "string",
+          "title": "Target File",
+          "default": ".argon/logs/session.log",
+          "description": "Path relative to workspace root where synced logs will be written"
+        }
+      }
+    },
     "tree": {
       "$ref": "#/$definitions/tree"
     }
