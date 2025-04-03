@@ -3,7 +3,7 @@
   "displayName": "Argon",
   "description": "Full featured tool for Roblox development",
   "publisher": "Dervex",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "icon": "assets/logo.png",
   "homepage": "https://argon.wiki",
   "repository": {
@@ -136,20 +136,6 @@
           "default": false,
           "description": "Log verbose tracing of the CLI to the output panel",
           "order": 8
-        },
-        "argon.logSync.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable syncing of Roblox Studio server logs to a local file via the Argon server",
-          "scope": "resource",
-          "order": 9
-        },
-        "argon.logSync.targetFile": {
-          "type": "string",
-          "default": ".argon/logs/session.log",
-          "description": "Path relative to workspace root where synced logs will be written",
-          "scope": "resource",
-          "order": 10
         }
       }
     },

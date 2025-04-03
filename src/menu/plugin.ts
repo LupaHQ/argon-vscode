@@ -1,6 +1,8 @@
 import * as vscode from "vscode"
 import * as argon from "../argon"
 import { Item } from "."
+import { State } from "../state"
+import { info as logInfo } from "../logger"
 
 export const item: Item = {
   label: "$(plug) Plugin",
@@ -35,6 +37,8 @@ function getMode(): Promise<argon.PluginMode> {
   })
 }
 
-export async function run() {
-  argon.plugin(await getMode())
+export async function run(state: State) {
+  const mode = await getMode()
+  logInfo(`Running 'argon plugin ${mode}' using detected CLI version: ${state.version}`)
+  argon.plugin(mode)
 }

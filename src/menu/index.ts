@@ -110,7 +110,7 @@ export async function onDidAccept(action: string, state: State) {
       await studio.run()
       break
     case "plugin":
-      await plugin.run()
+      await plugin.run(state)
       break
     case "update":
       await update.run()

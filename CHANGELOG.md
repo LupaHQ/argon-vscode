@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.2...HEAD
+
+## [v2.1.2] - 2024-04-03
+
+- No notable changes, version bumped for release alignment.
 
 ## [v2.1.1] - 2024-04-03
 
@@ -21,6 +25,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Roblox Log Syncing Settings:** Added new settings `argon.logSync.enabled` (default: `true`) and `argon.logSync.targetFile` (default: `.argon/logs/session.log`) to configure syncing of Roblox Studio logs to a local file.
 - **Project Schema Update:** Added `logSync` object to the `project.json` schema for configuring log syncing per-project.
 - New `Output` command to quickly see Argon output channel
+
+### Removed
+
+- Removed `argon.logSync.enabled` and `argon.logSync.targetFile` settings and `logSync` project schema definition, as log syncing is now always enabled.
 
 ## [2.0.18] - 2025-02-05
 
@@ -207,3 +215,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Initial release
 
 [2.0.0]: https://github.com/argon-rbx/argon-vscode/compare/87f2daec9b41b73676470d5eab01fe2fdc129cc8...2.0.0
+
+[v2.1.2]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.1...v2.1.2
+[v2.1.1]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.0...v2.1.1
