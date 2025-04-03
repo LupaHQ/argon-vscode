@@ -5,19 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-<<<<<<< HEAD
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.2...HEAD
+
+## [2.1.2] - 2025-04-03
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+
+[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.2...HEAD
+[2.1.2]: https://github.com/LupaHQ/argon-vscode/compare/HEAD...v2.1.2
 
 ## [v2.1.2] - 2024-04-03
 
-- No notable changes, version bumped for release alignment.
-=======
+- # No notable changes, version bumped for release alignment.
 
 ## [2.1.1] - 2025-04-03
 
 [unreleased]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.1...HEAD
 [2.1.1]: https://github.com/LupaHQ/argon-vscode/compare/2.0.0...v2.1.1
->>>>>>> 1d6ac043e216e748302e56eb4aa8d69edc13a585
+
+> > > > > > > 1d6ac043e216e748302e56eb4aa8d69edc13a585
 
 ## [v2.1.1] - 2024-04-03
 
@@ -223,6 +228,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Initial release
 
 [2.0.0]: https://github.com/argon-rbx/argon-vscode/compare/87f2daec9b41b73676470d5eab01fe2fdc129cc8...2.0.0
-
 [v2.1.2]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/LupaHQ/argon-vscode/compare/v2.1.0...v2.1.1
