@@ -91,18 +91,14 @@ async function ensureCursorSetup(
   }
 
   // Construct the path to the argon binary
-  const argonBinary = path.join(os.homedir(), ".argon", "bin", "argon") // Assumes standard install path
+  const argonBinary = path.join(os.homedir(), ".argon", "bin", "argon")
 
   // Create or overwrite mcp.json
   const servers = {
     mcpServers: {
       lemonadeRag: {
-        command: argonBinary, // Use the resolved binary path
-        args: [
-          "connect-mcp", // New subcommand
-          "https://lemoncode-mcp.santiagoarredondocif.workers.dev/sse",
-          "--client", // Add client flag for the rmcp client feature
-        ],
+        command: argonBinary,
+        args: ["connect-mcp"],
       },
     },
   }
