@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Fixed MCP configuration to improve stability with Cursor IDE integration
 - Updated dependencies to address potential security vulnerabilities
 
-[0.0.17]: https://github.com/LupaHQ/argon-vscode/compare/0.0.15...0.0.17
+[0.0.17]: https://github.com/LupaHQ/argon-vscode/compare/0.0.16...0.0.17
 
 ## [0.0.16] - 2025-04-22
 
