@@ -44,10 +44,10 @@ async function ensureCursorSetup(
   }
 
   // Sync rule files
-  await syncRules(context);
+  await syncRules(context)
 
   // Configure MCP server
-  await writeMcpConfig();
+  await writeMcpConfig()
 }
 
 async function checkSrcStructure(workspaceRoot: string): Promise<boolean> {

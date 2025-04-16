@@ -9,34 +9,40 @@ import { getCurrentDir } from "./util"
  * @param context VS Code extension context
  * @returns True if rules were synced successfully, false otherwise
  */
-export async function syncRules(context: vscode.ExtensionContext): Promise<boolean> {
-  const workspaceRoot = getCurrentDir();
+export async function syncRules(
+  context: vscode.ExtensionContext,
+): Promise<boolean> {
+  const workspaceRoot = getCurrentDir()
   if (!workspaceRoot) {
-    logger.warn("Cannot sync rules: No workspace folder open.", false);
-    return false;
+    logger.warn("Cannot sync rules: No workspace folder open.", false)
+    return false
   }
 
   // Ensure .cursor directory exists
-  const cursorPath = path.join(workspaceRoot, ".cursor");
+  const cursorPath = path.join(workspaceRoot, ".cursor")
   if (!fs.existsSync(cursorPath)) {
     try {
-      fs.mkdirSync(cursorPath);
+      fs.mkdirSync(cursorPath)
     } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      logger.error(`Failed to create .cursor directory: ${errMsg}`, false, true);
-      return false;
+      const errMsg = error instanceof Error ? error.message : String(error)
+      logger.error(`Failed to create .cursor directory: ${errMsg}`, false, true)
+      return false
     }
   }
 
   // Ensure rules directory exists
-  const rulesPath = path.join(cursorPath, "rules");
+  const rulesPath = path.join(cursorPath, "rules")
   if (!fs.existsSync(rulesPath)) {
     try {
-      fs.mkdirSync(rulesPath);
+      fs.mkdirSync(rulesPath)
     } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      logger.error(`Failed to create .cursor/rules directory: ${errMsg}`, false, true);
-      return false;
+      const errMsg = error instanceof Error ? error.message : String(error)
+      logger.error(
+        `Failed to create .cursor/rules directory: ${errMsg}`,
+        false,
+        true,
+      )
+      return false
     }
   }
 
@@ -46,11 +52,11 @@ export async function syncRules(context: vscode.ExtensionContext): Promise<boole
       context.extensionUri,
       "assets",
       "rules",
-    ).fsPath;
+    ).fsPath
 
     if (fs.existsSync(ruleAssetsPath)) {
-      const ruleFiles = fs.readdirSync(ruleAssetsPath);
-      let copiedFiles = 0;
+      const ruleFiles = fs.readdirSync(ruleAssetsPath)
+      let copiedFiles = 0
 
       for (const file of ruleFiles) {
         const srcPath = vscode.Uri.joinPath(
@@ -58,23 +64,29 @@ export async function syncRules(context: vscode.ExtensionContext): Promise<boole
           "assets",
           "rules",
           file,
-        ).fsPath;
-        const destPath = path.join(rulesPath, file);
+        ).fsPath
+        const destPath = path.join(rulesPath, file)
 
         // Use copyFileSync to overwrite if exists
-        fs.copyFileSync(srcPath, destPath);
-        copiedFiles++;
+        fs.copyFileSync(srcPath, destPath)
+        copiedFiles++
       }
 
-      logger.info(`Successfully synced ${copiedFiles} rule files to ${rulesPath}`, false);
-      return true;
+      logger.info(
+        `Successfully synced ${copiedFiles} rule files to ${rulesPath}`,
+        false,
+      )
+      return true
     } else {
-      logger.warn(`Extension assets/rules directory not found at: ${ruleAssetsPath}`, false);
-      return false;
+      logger.warn(
+        `Extension assets/rules directory not found at: ${ruleAssetsPath}`,
+        false,
+      )
+      return false
     }
   } catch (error) {
-    const errMsg = error instanceof Error ? error.message : String(error);
-    logger.error(`Failed to sync rule files: ${errMsg}`, false, true);
-    return false;
+    const errMsg = error instanceof Error ? error.message : String(error)
+    logger.error(`Failed to sync rule files: ${errMsg}`, false, true)
+    return false
   }
-} 
+}

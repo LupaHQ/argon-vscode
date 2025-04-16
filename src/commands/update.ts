@@ -14,7 +14,7 @@ export function update(state: State) {
 
     // Then try to update the extension itself
     await updateExtension()
-    
+
     // After updates, sync rule files and ensure MCP configuration is properly set up
     await syncRules(state.context)
     await writeMcpConfig()
