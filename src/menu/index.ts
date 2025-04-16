@@ -40,7 +40,7 @@ export async function onDidAccept(action: string, state: State) {
       await startLemonade.run(state, state.context)
       break
     case "update":
-      await update.run()
+      await update.run(state)
       break
     // No other cases needed as other items are disabled
   }

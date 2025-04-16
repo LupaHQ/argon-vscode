@@ -1,13 +1,14 @@
 import * as vscode from "vscode"
 import * as path from "path"
 import * as fs from "fs"
-import * as os from "os" // Added os import
 import * as argon from "../argon" // Use correct relative path
 import * as config from "../config" // Use correct relative path
 import * as logger from "../logger" // Import logger
 import { getCurrentDir } from "../util" // Use correct relative path
 import { State } from "../state" // Import State if needed by run signature
 import { Item } from "." // Import Item type from index
+import { writeMcpConfig } from "../mcpConfig"
+import { syncRules } from "../ruleSync"
 
 export const item: Item = {
   label: "$(rocket) Start Lemonade",
@@ -42,74 +43,11 @@ async function ensureCursorSetup(
     }
   }
 
-  const rulesPath = path.join(cursorPath, "rules")
-  if (!fs.existsSync(rulesPath)) {
-    try {
-      fs.mkdirSync(rulesPath)
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error)
-      logger.error(
-        `Failed to create .cursor/rules directory: ${errMsg}`,
-        false,
-        true,
-      )
-      // Continue to try creating mcp.json even if rules dir fails
-    }
-  }
+  // Sync rule files
+  await syncRules(context);
 
-  // Copy rule files if rules directory exists or was created
-  if (fs.existsSync(rulesPath)) {
-    try {
-      const ruleAssetsPath = vscode.Uri.joinPath(
-        context.extensionUri,
-        "assets",
-        "rules",
-      ).fsPath
-      if (fs.existsSync(ruleAssetsPath)) {
-        const ruleFiles = fs.readdirSync(ruleAssetsPath)
-        for (const file of ruleFiles) {
-          const srcPath = vscode.Uri.joinPath(
-            context.extensionUri,
-            "assets",
-            "rules",
-            file,
-          ).fsPath
-          const destPath = path.join(rulesPath, file)
-          // Use copyFileSync to overwrite if exists
-          fs.copyFileSync(srcPath, destPath)
-        }
-      } else {
-        logger.warn(
-          `Extension assets/rules directory not found at: ${ruleAssetsPath}`,
-          false,
-        ) // Log warning, not error
-      }
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error)
-      logger.error(`Failed to copy rule files: ${errMsg}`, false, true)
-    }
-  }
-
-  // Construct the path to the argon binary
-  const argonBinary = path.join(os.homedir(), ".argon", "bin", "argon")
-
-  // Create or overwrite mcp.json
-  const servers = {
-    mcpServers: {
-      lemonadeRag: {
-        command: argonBinary,
-        args: ["connect-mcp"],
-      },
-    },
-  }
-
-  const mcpJsonPath = path.join(cursorPath, "mcp.json")
-  try {
-    fs.writeFileSync(mcpJsonPath, JSON.stringify(servers, null, 2))
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : String(error)
-    logger.error(`Failed to write mcp.json: ${errMsg}`, false, true)
-  }
+  // Configure MCP server
+  await writeMcpConfig();
 }
 
 async function checkSrcStructure(workspaceRoot: string): Promise<boolean> {
