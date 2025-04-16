@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...HEAD
+
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...HEAD
+
+## [0.0.22] - YYYY-MM-DD
+
+### Security
+
+- Removed Pinecone API key from `.cursor/mcp.json` generation; key is now hardcoded in the CLI.
 
 ## [0.0.21] - YYYY-MM-DD
 
@@ -185,3 +192,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `Show Output`
 
 [0.0.21]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.21
+[0.0.22]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...0.0.22
