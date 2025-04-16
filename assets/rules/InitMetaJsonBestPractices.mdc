@@ -12,6 +12,8 @@ alwaysApply: true
 ## PRIORITY: HIGH
 ## READING-ORDER: 6
 
+---
+
 **IMPORTANT NOTE:** For UI elements (Frames, Buttons, Labels, etc.) that are referenced or manipulated by scripts, **DO NOT** use `init.meta.json` to define them. You **MUST** create them programmatically using `Instance.new()` as mandated in `robloxbestpractices.txt`. This file covers `.meta.json` usage for other purposes (e.g., setting properties on scripts/models, defining non-UI instances) and general syntax.
 
 ## 1. Key Casing & Complex Types (Summary)
