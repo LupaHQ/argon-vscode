@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.17...HEAD
+[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...HEAD
+
+## [0.0.20] - 2025-04-30
+
+### Added
+- Support for simplified MCP server configuration in `.cursor/mcp.json`
+- Added Pinecone API integration via environment variables for local RAG
+
+### Changed
+- Improved update process to maintain user configuration when updating MCP settings
+
+[0.0.20]: https://github.com/LupaHQ/argon-vscode/compare/0.0.17...0.0.20
 
 ## [0.0.17] - 2025-04-22
 
