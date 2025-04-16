@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.23...HEAD
+
+## [0.0.23] - 2024-06-06
+
+### Changed
+
+- Integrated latest changes from main branch.
+- Updated internal development configuration (Cursor rules).
 
 ## [0.0.22] - YYYY-MM-DD
 
@@ -193,3 +200,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 [0.0.21]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.21
 [0.0.22]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...0.0.22
+[0.0.23]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...0.0.23
