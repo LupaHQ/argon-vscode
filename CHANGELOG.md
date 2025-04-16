@@ -5,16 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), that adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...HEAD
 
-[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...HEAD
+## [0.0.21] - YYYY-MM-DD
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
 
 ## [0.0.20] - 2025-04-30
 
 ### Added
+
 - Support for simplified MCP server configuration in `.cursor/mcp.json`
 - Added Pinecone API integration via environment variables for local RAG
 
 ### Changed
+
 - Improved update process to maintain user configuration when updating MCP settings
 
 [0.0.20]: https://github.com/LupaHQ/argon-vscode/compare/0.0.17...0.0.20
@@ -22,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [0.0.17] - 2025-04-22
 
 ### Fixed
+
 - Enhanced error handling for Argon CLI communication
 - Fixed MCP configuration to improve stability with Cursor IDE integration
 - Updated dependencies to address potential security vulnerabilities
@@ -31,6 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [0.0.16] - 2025-04-22
 
 ### Fixed
+
 - Enhanced error handling for Argon CLI communication
 - Fixed MCP configuration to improve stability with Cursor IDE integration
 - Updated dependencies to address potential security vulnerabilities
@@ -170,3 +183,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Completion for `rename_instances` setting
 - `Show Output`
+
+[0.0.21]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.21
