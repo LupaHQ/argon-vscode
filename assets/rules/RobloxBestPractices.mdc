@@ -24,6 +24,24 @@ alwaysApply: true
 - Use generalized iteration (no `ipairs()` or `pairs()` is needed).
 - Do not use `WaitForChild` on Workspace instances unless necessary (runtime creation or StreamingEnabled client). See UI rule below.
 
+- **MANDATORY API TYPE RULE:** Pay close attention to the expected data types for Roblox Instance properties. Assigning an incorrect Luau type (e.g., `Vector3` to a `CFrame` property) will cause runtime errors.
+    - **REASON:** While Luau is dynamically typed, many Roblox properties have strict type requirements enforced by the engine.
+    - **CONSEQUENCE:** Runtime errors like "Unable to assign property [PropertyName]. [ExpectedType] expected, got [ActualType]".
+    - **EXAMPLE (Incorrect):**
+      ```luau
+      local part = Instance.new("Part")
+      local positionVector = Vector3.new(0, 10, 0)
+      part.CFrame = positionVector -- ERROR: Assigning Vector3 to CFrame property
+      ```
+    - **EXAMPLE (Correct):**
+      ```luau
+      local part = Instance.new("Part")
+      local positionVector = Vector3.new(0, 10, 0)
+      part.CFrame = CFrame.new(positionVector) -- CORRECT: Assigning a CFrame
+      -- or
+      part.Position = positionVector -- CORRECT: Assigning Vector3 to Position property
+      ```
+
 - **MANDATORY UI RULE:** UI elements referenced or manipulated by scripts **MUST** be created programmatically using `Instance.new()`.
     - **REASON:** Defining scripted UI via Rojo (`init.meta.json` or implicit folders) causes critical errors: type mismatches (finding `Folder` instead of `Frame`), infinite `WaitForChild` yields, timing issues (accessing properties before calculation), and conflicts with `init` scripts (e.g., `init.client.luau` expects parent to be `LocalScript`, but `init.meta.json` might force it to be `ScreenGui`, preventing the script from running correctly).
     - **CONSEQUENCE:** Non-functional UI, difficult-to-debug errors.

@@ -25,6 +25,7 @@ alwaysApply: true
     - **ModuleScript:** Use `.luau` (without `.client` or `.server` suffix, unless it's an `init` script)
         - CORRECT: `CombatUtilities.luau` -> Creates a ModuleScript named "CombatUtilities"
         - INCORRECT: `SprintHandler.luau` -> This would create a ModuleScript, not the intended LocalScript
+        - WARNING: Using the wrong suffix (e.g., `.server.luau`) for a file you intend to use as a `ModuleScript` will cause `require()` to fail, as `require()` only works on `ModuleScript` instances.
 - IMPORTANT: SCRIPTS NAMED `init.client.luau`, `init.server.luau`, or `init.luau` transform their PARENT DIRECTORY into the corresponding script type.
     - EXAMPLE: `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript.
 - IMPORTANT: YOU MUST RETURN EXACTLY ONE VALUE FROM A `ModuleScript`
