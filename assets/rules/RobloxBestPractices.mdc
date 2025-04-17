@@ -24,8 +24,8 @@ alwaysApply: true
 - Use generalized iteration (no `ipairs()` or `pairs()` is needed).
 - Do not use `WaitForChild` on Workspace instances unless necessary (runtime creation or StreamingEnabled client). See UI rule below.
 
-- **MANDATORY UI RULE:** UI elements referenced or manipulated by scripts **MUST** be created programmatically using `Instance.new()`. 
-    - **REASON:** Defining scripted UI via Rojo (`init.meta.json` or implicit folders) causes critical errors: type mismatches (finding `Folder` instead of `Frame`), infinite `WaitForChild` yields, and timing issues (accessing properties before calculation).
+- **MANDATORY UI RULE:** UI elements referenced or manipulated by scripts **MUST** be created programmatically using `Instance.new()`.
+    - **REASON:** Defining scripted UI via Rojo (`init.meta.json` or implicit folders) causes critical errors: type mismatches (finding `Folder` instead of `Frame`), infinite `WaitForChild` yields, timing issues (accessing properties before calculation), and conflicts with `init` scripts (e.g., `init.client.luau` expects parent to be `LocalScript`, but `init.meta.json` might force it to be `ScreenGui`, preventing the script from running correctly).
     - **CONSEQUENCE:** Non-functional UI, difficult-to-debug errors.
     - **PREFER (Correct):**
       ```luau

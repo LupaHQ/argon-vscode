@@ -37,6 +37,65 @@ To ensure correct file placement in Rojo projects by strictly adhering to the pr
   }
   ```
 
+## 2.1 WARNING: Potential Conflict Between `$path` and Explicit Child Definitions
+
+- **ISSUE:** A conflict can occur if you use `$path` to sync a directory (e.g., `src/ReplicatedStorage`) AND you *also* explicitly define a child instance in `default.project.json` with the same name as a folder *inside* that synced directory (e.g., defining an `Events` instance when `src/ReplicatedStorage/Events/` exists).
+- **CONSEQUENCE:** This can lead to duplicate instances in Studio (one synced via `$path`, one created explicitly) or unpredictable behavior, causing errors like infinite yields when scripts try to find children.
+- **EXAMPLE SCENARIO (Problematic):**
+  ```json
+  // default.project.json (excerpt) - POTENTIAL CONFLICT
+  "ReplicatedStorage": {
+    "$path": "src/ReplicatedStorage", // Syncs the src/ReplicatedStorage folder
+    "Events": {                      // ALSO explicitly defines an 'Events' instance
+      "$className": "Folder"
+    }
+  }
+  ```
+  ```plaintext
+  # Filesystem structure
+  src/
+    ReplicatedStorage/
+      Events/             <-- This folder exists physically
+        SomeScript.luau
+  ```
+  This setup might create TWO "Events" folders in `ReplicatedStorage`.
+
+- **RECOMMENDED SOLUTIONS:**
+  1.  **Rely on `$path` Only:** If you have a physical folder (`src/ReplicatedStorage/Events/`), let `$path` handle syncing it. Use `init.meta.json` inside `src/ReplicatedStorage/Events/` if you need to specify its `className` or add children metadata.
+      ```json
+      // default.project.json (excerpt) - Relies on $path
+      "ReplicatedStorage": {
+        "$path": "src/ReplicatedStorage"
+      }
+      ```
+      ```plaintext
+      # Filesystem structure with metadata
+      src/
+        ReplicatedStorage/
+          Events/
+            init.meta.json   <-- Defines Events folder & children
+            RoundStateChanged.luau.init.meta.json <-- Or define children via file metadata
+      ```
+  2.  **Define Virtually Only:** If you don't need a physical folder for organizing source files, define the instance and its children entirely within `default.project.json` and *do not* create a corresponding physical folder in the `src` directory.
+      ```json
+      // default.project.json (excerpt) - Defines virtually
+      "ReplicatedStorage": {
+        "$path": "src/ReplicatedStorage", // Syncs OTHER items if present
+        "Events": {                      // Defines Events virtually
+          "$className": "Folder",
+          "RoundStateChanged": {         // Defines child virtually
+            "$className": "RemoteEvent"
+          }
+        }
+      }
+      ```
+      ```plaintext
+      # Filesystem structure - NO Events folder needed here
+      src/
+        ReplicatedStorage/
+          SomeOtherModule.luau
+      ```
+
 ## 3. Path Authority: `default.project.json` is KING
 
 **RULE: The `$path` values in `default.project.json` are the ONLY source of truth for where to put your files when syncing directories.**
