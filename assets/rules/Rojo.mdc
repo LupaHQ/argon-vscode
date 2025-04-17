@@ -1,9 +1,4 @@
 ---
-description: 
-globs: 
-alwaysApply: true
----
----
 description: Guidelines about workspace folder structure (directories).
 globs: **/*
 alwaysApply: true
@@ -95,6 +90,33 @@ To ensure correct file placement in Rojo projects by strictly adhering to the pr
         ReplicatedStorage/
           SomeOtherModule.luau
       ```
+
+## 2.2 Ensuring `.meta.json` Instances Are Created Inside `$path` Directories
+
+- **SITUATION:** You are syncing a directory using `$path` (e.g., `"$path": "src/ReplicatedStorage/Events"`) and want to define specific non-script instances *inside* that directory using individual `.meta.json` files (e.g., `src/ReplicatedStorage/Events/MyEvent.meta.json` defining a `RemoteEvent`, `BoolValue`, `Folder`, etc.).
+- **POTENTIAL ISSUE:** Rojo might not reliably create the instance defined in the `.meta.json` file unless a corresponding source file (usually `.luau`) exists alongside it to act as an anchor.
+- **CONSEQUENCE:** Failure to create the instance, leading to runtime errors like `Infinite yield possible` when scripts use `WaitForChild` to find the instance.
+- **RECOMMENDATION:** If you define an instance using a *non-init* `.meta.json` file within a directory managed by `$path`, **also create an empty placeholder `.luau` file with the same base name.**
+- **REASON:** The empty placeholder file acts as an anchor for Rojo to correctly process the associated `.meta.json` when scanning the `$path` directory. Leaving it empty prevents Rojo from attempting to assign its content to invalid properties (like `Source` on a `BoolValue`), avoiding warnings.
+- **EXAMPLE (Correct Structure):**
+  ```plaintext
+  # Filesystem structure
+  src/
+    ReplicatedStorage/
+      Events/                 <-- Synced via "$path": "src/ReplicatedStorage/Events"
+        RoundStateChanged.meta.json  <-- Defines RemoteEvent
+        RoundStateChanged.luau       <-- Corresponding ANCHOR file (MUST exist)
+  ```
+  ```json
+  // src/ReplicatedStorage/Events/RoundStateChanged.meta.json
+  {
+    "className": "RemoteEvent"
+  }
+  ```
+  ```lua
+  -- src/ReplicatedStorage/Events/RoundStateChanged.luau
+  -- This file MUST exist but should be EMPTY.
+  ```
 
 ## 3. Path Authority: `default.project.json` is KING
 
