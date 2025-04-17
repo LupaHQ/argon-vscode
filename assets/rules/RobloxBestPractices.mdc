@@ -24,6 +24,23 @@ alwaysApply: true
 - Use generalized iteration (no `ipairs()` or `pairs()` is needed).
 - Do not use `WaitForChild` on Workspace instances unless necessary (runtime creation or StreamingEnabled client). See UI rule below.
 
+- **CLARIFICATION on WaitForChild for Characters:** While `WaitForChild` should be avoided for *static* items already present in the Workspace hierarchy at edit time, it is **essential** when dealing with dynamically loaded or replicated instances, particularly **player characters** on the server, especially during spawning or teleportation sequences. Always wait for the character model and necessary parts like `HumanoidRootPart` before manipulating them to avoid errors due to replication delays.
+    - **EXAMPLE (Server Script - Teleporting):**
+      ```luau
+      local function teleportPlayerToSpawn(player: Player, position: Vector3)
+          local character = player.Character or player.CharacterAdded:Wait() -- Wait for character if not present
+          local hrp = character:WaitForChild("HumanoidRootPart", 5) -- Wait up to 5s for the root part
+          if hrp then
+              hrp.CFrame = CFrame.new(position)
+          else
+              warn("Could not find HumanoidRootPart for", player.Name)
+          end
+      end
+      ```
+
+- **MANAGING DEFAULT ENGINE FEATURES:** When implementing custom systems (like spawning, rounds, etc.), be mindful of default Roblox behaviors that might conflict. Disable or manage these features explicitly.
+    - **EXAMPLE (Custom Spawning):** If implementing custom teleport-based spawning, disable default `SpawnLocation` objects (`spawnLocation.Enabled = false`) during periods when custom spawning is active to prevent interference.
+
 - **MANDATORY API TYPE RULE:** Pay close attention to the expected data types for Roblox Instance properties. Assigning an incorrect Luau type (e.g., `Vector3` to a `CFrame` property) will cause runtime errors.
     - **REASON:** While Luau is dynamically typed, many Roblox properties have strict type requirements enforced by the engine.
     - **CONSEQUENCE:** Runtime errors like "Unable to assign property [PropertyName]. [ExpectedType] expected, got [ActualType]".
@@ -62,4 +79,51 @@ alwaysApply: true
       ```luau
       -- Avoid finding UI defined by Rojo in scripts:
       local frame = parentGui:WaitForChild("MyFrame") -- Unreliable/Error-prone!
+      ```
+
+-- SCRIPT SECURITY CONTEXT & PROPERTY MODIFICATION --
+- **SCRIPT PERMISSION LIMITATIONS:** Be aware that standard server scripts (`.server.luau`) and client scripts (`.client.luau`) run with specific, limited permissions. They cannot modify certain protected engine properties or access restricted services. Attempting to do so will result in runtime errors (e.g., "The current thread cannot write '[PropertyName]' (lacking capability Plugin)").
+    - **REASON:** Security model to prevent malicious scripts from gaining excessive control.
+    - **CONSEQUENCE:** Runtime errors halting script execution.
+    - **EXAMPLE (Incorrect - Server Script):**
+      ```luau
+      -- This will likely fail in a standard Script due to permissions:
+      game:GetService("Workspace").FallenPartsDestroyHeight = -10000
+      game:GetService("CoreGui"):ClearAllChildren() -- Accessing/modifying CoreGui is restricted
+      ```
+    - **NOTE:** Modifying standard, non-protected properties of instances (like `Part.Color`, `Part.Anchored`, `Humanoid.Health` via `TakeDamage`) is generally allowed within the standard client/server security rules.
+
+-- EVENT CONNECTION STRATEGY --
+- **EVENT CONNECTION SPECIFICITY:** When detecting interactions (like touches, clicks), connect your event listener to the most specific object involved, especially if you need to know *which* object was interacted with. Avoid overly broad listeners if specific context is required.
+    - **REASON:** Improves code clarity, reliability, and often performance by avoiding unnecessary checks.
+    - **SCENARIO:** Making specific floor tiles disappear when a player steps on *them*.
+    - **AVOID (Less Reliable/Clear):** Connecting to `Humanoid.Touched` and then trying to figure out *if* the `otherPart` was one of your specific floor tiles.
+      ```luau
+      -- In Player/Character Script (Less Ideal for this specific case)
+      local function humanoidTouched(otherPart)
+          -- Problem: Need to check if otherPart is one of the specific floor tiles.
+          -- This requires searching/checking properties, less direct.
+          if IsSpecificFloorTile(otherPart) and roundActive then
+              MakeTileDisappear(otherPart)
+          end
+      end
+      humanoid.Touched:Connect(humanoidTouched)
+      ```
+    - **PREFER (More Reliable/Clear):** Connecting directly to *each specific floor tile's* `Touched` event and checking if the toucher is a player.
+      ```luau
+      -- In Server Script managing the tiles
+      local function handleTileTouch(otherPart, tileInstance) -- tileInstance is the specific tile
+          local character = otherPart.Parent
+          local humanoid = character:FindFirstChildOfClass("Humanoid")
+          if humanoid and roundActive then
+              -- We know 'tileInstance' is the specific tile that was touched.
+              MakeTileDisappear(tileInstance)
+          end
+      end
+
+      for _, tile in GetSpecificFloorTiles() do
+          tile.Touched:Connect(function(partTouching)
+              handleTileTouch(partTouching, tile)
+          end)
+      end
       ```
