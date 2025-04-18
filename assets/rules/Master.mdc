@@ -30,6 +30,23 @@ alwaysApply: true
     - EXAMPLE: `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript.
 - IMPORTANT: YOU MUST RETURN EXACTLY ONE VALUE FROM A `ModuleScript`
 - IMPORTANT: YOU MUST DECLARE FUNCTIONS BEFORE REFERENCING OR CALLING THEM!
+- IMPORTANT: ENSURE ALL CODE IS SYNTACTICALLY CORRECT LUAU. Errors like missing `end` statements or using incorrect keywords (e.g., `elif` instead of `elseif`) will prevent scripts from running.
+    - **EXAMPLE (Incorrect):**
+      ```luau
+      if condition then
+          print("Condition met")
+      elif otherCondition then -- ERROR: Incorrect keyword 'elif'
+          print("Other condition met")
+      -- ERROR: Missing 'end' for the 'if' block
+      ```
+    - **EXAMPLE (Correct):**
+      ```luau
+      if condition then
+          print("Condition met")
+      elseif otherCondition then -- CORRECT keyword
+          print("Other condition met")
+      end -- CORRECT block termination
+      ```
 - YOU MUST ALWAYS QUERY `Roblox Documentation` FROM THE LemonadeRAG MCP SERVER BEFORE USING ANY ROBLOX API
     - EXAMPLE: "ScreenGUI Color Property"
 - ROBLOX API IS DEFINED AS ANYTHING THAT IS NOT LANGUAGE SYNTAX (i.e. functions such as `require()`, `pcall()`, etc. or API such as `TweenService`, `MouseService`, etc.)

@@ -1,4 +1,9 @@
 ---
+description: 
+globs: 
+alwaysApply: true
+---
+---
 description: Guidelines about workspace folder structure (directories).
 globs: **/*
 alwaysApply: true
@@ -158,3 +163,17 @@ To ensure correct file placement in Rojo projects by strictly adhering to the pr
 ```
 - **CORRECT Filesystem Path:** `src/ServerScriptService/` (e.g., `src/ServerScriptService/MainLoop.server.luau`).
 - **INCORRECT Filesystem Path:** `src/server/` (unless `$path` explicitly points there).
+
+**Scenario 4: `default.project.json` maps nested default container `StarterPlayerScripts`**
+```json
+// default.project.json (excerpt)
+"StarterPlayer": {
+  "$className": "StarterPlayer",      // Optional: Define the parent service
+  "StarterPlayerScripts": {           // Define the nested container
+    "$className": "StarterPlayerScripts", // Optional: Define its class
+    "$path": "src/StarterPlayer/StarterPlayerScripts" // Define the FS path
+  }
+}
+```
+- **CORRECT Filesystem Path:** `src/StarterPlayer/StarterPlayerScripts/` (e.g., `src/StarterPlayer/StarterPlayerScripts/UIHandler.client.luau`).
+- **INCORRECT Filesystem Paths:** `src/StarterPlayerScripts/` (doesn't reflect nesting), `src/client/` (unless `$path` points there).
