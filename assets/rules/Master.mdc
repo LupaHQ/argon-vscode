@@ -29,8 +29,8 @@ alwaysApply: true
 - IMPORTANT: SCRIPTS NAMED `init.client.luau`, `init.server.luau`, or `init.luau` transform their PARENT DIRECTORY into the corresponding script type.
     - EXAMPLE: `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript.
 - IMPORTANT: YOU MUST RETURN EXACTLY ONE VALUE FROM A `ModuleScript`
-- IMPORTANT: YOU MUST DECLARE FUNCTIONS BEFORE REFERENCING OR CALLING THEM!
-- IMPORTANT: ENSURE ALL CODE IS SYNTACTICALLY CORRECT LUAU. Errors like missing `end` statements or using incorrect keywords (e.g., `elif` instead of `elseif`) will prevent scripts from running.
+- IMPORTANT: YOU MUST DECLARE FUNCTIONS BEFORE REFERENCING OR CALLING THEM! Forward declarations (`local function foo() end` or just `local foo`) are useful, but ensure they are complete statements if defined at the top level. Incomplete declarations like `local function foo` without a definition or `end` can cause parsing errors. Prefer defining functions fully before use, or use `local foo` and assign `foo = function() ... end` later if necessary.
+- IMPORTANT: ENSURE ALL CODE IS SYNTACTICALLY CORRECT LUAU. Errors like missing `end` statements, using incorrect keywords (e.g., `elif` instead of `elseif`), or improperly structured blocks (especially nested functions) will prevent scripts from running.
     - **EXAMPLE (Incorrect):**
       ```luau
       if condition then
@@ -46,6 +46,23 @@ alwaysApply: true
       elseif otherCondition then -- CORRECT keyword
           print("Other condition met")
       end -- CORRECT block termination
+      ```
+    - **EXAMPLE (Nested Pitfall - Incorrect):**
+      ```luau
+      task.delay(1, function() -- Outer function
+          task.delay(1, function() -- Inner function
+              print("Inner")
+          end) -- Closes inner function AND inner delay call
+      -- ERROR: Missing 'end' for the outer anonymous function before the outer ')'
+      ) -- Closes outer delay call
+      ```
+    - **EXAMPLE (Nested Pitfall - Correct):**
+      ```luau
+      task.delay(1, function() -- Outer function
+          task.delay(1, function() -- Inner function
+              print("Inner")
+          end) -- Closes inner function AND inner delay call
+      end) -- CORRECT: Closes outer function AND outer delay call
       ```
 - YOU MUST ALWAYS QUERY `Roblox Documentation` FROM THE LemonadeRAG MCP SERVER BEFORE USING ANY ROBLOX API
     - EXAMPLE: "ScreenGUI Color Property"

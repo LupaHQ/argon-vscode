@@ -38,6 +38,29 @@ alwaysApply: true
       end
       ```
 
+- **WARNING: `WaitForChild` & `require()` Deadlocks:** Be cautious using `WaitForChild` in top-level code of scripts, *especially* if that script is `require`'d by another script that might be responsible for creating the instance being waited for. This can lead to deadlocks: Script A requires Script B -> Script B's top-level code runs and calls `WaitForChild("Thing")` -> Script A was supposed to create "Thing" *after* the require, but it's stuck waiting for Script B to finish loading. 
+    - **SOLUTION 1:** Ensure the requiring script (Script A) finds/creates the necessary instance *before* it `require`s the dependent script (Script B).
+    - **SOLUTION 2 (Lazy Loading):** Have the dependent script (Script B) look up the instance inside its functions *when they are called*, rather than at the top level. Assume the instance will exist by the time the function is used.
+      ```luau
+      -- Script B (ModuleScript)
+      local module = {}
+
+      -- AVOID: Top-level WaitForChild - potential deadlock if required too early
+      -- local Thing = workspace:WaitForChild("Thing") 
+
+      function module.UseThing()
+          -- PREFER: Find the instance when the function is actually called
+          local Thing = workspace:FindFirstChild("Thing") 
+          if Thing then
+              print("Found Thing:", Thing)
+          else
+              warn("UseThing called but Thing does not exist!")
+          end
+      end
+
+      return module
+      ```
+
 - **MANAGING DEFAULT ENGINE FEATURES:** When implementing custom systems (like spawning, rounds, etc.), be mindful of default Roblox behaviors that might conflict. Disable or manage these features explicitly.
     - **EXAMPLE (Custom Spawning):** If implementing custom teleport-based spawning, disable default `SpawnLocation` objects (`spawnLocation.Enabled = false`) during periods when custom spawning is active to prevent interference.
 
