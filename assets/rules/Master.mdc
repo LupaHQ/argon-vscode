@@ -14,8 +14,8 @@ alwaysApply: true
 
 # MASTER RULES
 - YOU MUST CONSULT RULES AND INFORMATION REGARDING ROJO BEFORE WRITING ANY CODE
-- WARNING: THE PROJECT FILESYSTEM IS NOT A REPRESENTATION OF THE ROBLOX FILESYSTEM THE SCRIPTS RUN IN! YOU MUST CONSULT `default.project.json` FOR ANY MAPPING BETWEEN PROJECT AND ROBLOX FILESYSTEMS
-    - EXAMPLE: SCRIPTS IN `src/shared/` ARE INSIDE OF `ReplicatedStorage.Shared`, ...
+- WARNING: THE PROJECT FILESYSTEM IS NOT A REPRESENTATION OF THE ROBLOX FILESYSTEM THE SCRIPTS RUN IN!
+- **CRITICAL:** You **MUST** consult **BOTH** the `default.project.json` file **AND** the rules in `projectbestpractices.txt` to understand the mapping between the project filesystem and the Roblox instance hierarchy. Failure to do so *will* result in incorrect structure and errors.
 - YOU MUST NOT CREATE SCRIPTS ADHEREING TO THE FOLLOWING PATTERN: `<NAME>.<DIRECTORY>.luau` // Example: MyScript.FolderName.luau is incorrect
 - IMPORTANT: Rojo uses file suffixes to determine script type. Use the correct suffix:
     - **LocalScript:** Use `.client.luau`

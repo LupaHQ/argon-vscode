@@ -1,0 +1,243 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Best practices for structuring default.project.json.
+globs: default.project.json
+alwaysApply: true
+---
+
+## PRIORITY: HIGH
+## READING-ORDER: 3.5 # Between Master and Rojo
+
+# default.project.json Best Practices
+
+## 1. The Single Source of Truth
+
+- **WARNING:** THE PROJECT FILESYSTEM IS NOT A REPRESENTATION OF THE ROBLOX INSTANCE HIERARCHY! The `default.project.json` file is the **ONLY** source of truth for mapping filesystem directories and files to Roblox instances.
+- **ALWAYS:** Consult `default.project.json` *before* adding or moving files to understand where they will appear in the Roblox hierarchy.
+
+## 2. Understanding `default.project.json` Structure
+
+- **Rojo:** Uses `default.project.json` to map your project files to Roblox instances (like Folders, Scripts, Services).
+- **Required Fields:** Every `default.project.json` *must* have a `name` (string) and a `tree` (object).
+- **`tree` Object:** This defines your project's root in Roblox and contains mappings. Keys inside `tree` typically represent Roblox instances.
+
+## 3. Core Mapping Properties (`$path`, `$className`, `$properties`)
+
+- **`$path`:** Tells Rojo: "Sync the contents of *this filesystem directory* into the Roblox instance defined by the key." (e.g., `"src/ReplicatedStorage"`). This is used for syncing entire directories of code or assets.
+- **`$className`:** Specifies the Roblox class (e.g., `"Folder"`, `"ScreenGui"`, `"RemoteEvent"`). Used when defining instances *virtually* within `default.project.json` (without a corresponding source file/folder) or when defining top-level services.
+- **`$properties`:** An object defining properties to set on the instance (e.g., `{"Archivable": false}`). Property formatting rules are in `InitMetaJsonBestPractices.mdc`.
+- **Child Instances:** Any key in the `tree` that *doesn't* start with `$` defines a *named child instance* created under its parent key. The key itself becomes the instance's `Name`.
+  ```json
+  // Example: Creates a Folder named "MyFolder" inside ReplicatedStorage
+  "ReplicatedStorage": {
+    "$className": "ReplicatedStorage", // Defines the service itself
+    "MyFolder": {                   // Defines a child instance named "MyFolder"
+      "$className": "Folder"        // Specifies its class
+    }
+  }
+  ```
+
+## 4. `$path` vs. Explicit Child Definitions
+
+- **WARNING: Potential Conflict:** A conflict can occur if you use `$path` to sync a directory (e.g., `src/ReplicatedStorage`) AND you *also* explicitly define a child instance in `default.project.json` with the same name as a folder *inside* that synced directory (e.g., defining `"MyFolder": { "$className": "Folder" }` when `src/ReplicatedStorage/MyFolder/` exists).
+- **CONSEQUENCE:** This can lead to duplicate instances in Studio or unpredictable behavior.
+- **RECOMMENDED SOLUTIONS:** Choose **one** method per instance:
+  1.  **Sync via `$path`:** If you have a physical folder (`src/ReplicatedStorage/MyFolder/`), let `$path` on `ReplicatedStorage` handle syncing it. Use `init.meta.json` *inside* `src/ReplicatedStorage/MyFolder/` if you need to specify its `className` or properties.
+      ```json
+      // default.project.json (excerpt) - Relies on $path
+      "ReplicatedStorage": {
+        "$path": "src/ReplicatedStorage" // Syncs everything inside
+      }
+      ```
+      ```plaintext
+      # Filesystem structure
+      src/
+        ReplicatedStorage/
+          MyFolder/          <-- Synced because of $path
+            init.meta.json <-- Optional: Defines MyFolder's class/props
+      ```
+  2.  **Define Virtually:** If you don't need a physical folder for organization, define the instance and its children entirely within `default.project.json` and *do not* create a corresponding physical folder in the `src` directory linked by `$path`.
+      ```json
+      // default.project.json (excerpt) - Defines virtually
+      "ReplicatedStorage": {
+        "$className": "ReplicatedStorage", // Define service
+        "MyFolder": {                   // Defines MyFolder virtually
+          "$className": "Folder"
+        }
+      }
+      ```
+      ```plaintext
+      # Filesystem structure - NO MyFolder needed here
+      src/
+        ReplicatedStorage/ # May not even need this if nothing else uses $path
+          SomeOtherModule.luau
+      ```
+
+## 5. Path Authority: Follow `$path` Exactly
+
+- **RULE:** The `$path` values in `default.project.json` are the ONLY source of truth for where to put your files when syncing directories.
+- **ALWAYS:** Check `default.project.json`. Find the Roblox service/instance (e.g., `ServerScriptService`). Look at its `$path` value (e.g., `"src/Server"`). Place your corresponding source files inside *that exact filesystem directory* (e.g., `src/Server/MyScript.server.luau`).
+- **NEVER:** Guess filesystem paths based on common conventions (`src/ServerScriptService/`, `src/client/`) if they don't match the `$path` specified in *your* `default.project.json`.
+
+## 6. Examples (`$path` Authority)
+
+**Scenario 1: `default.project.json` maps `ServerScriptService` to `src/ServerCode`**
+```json
+"ServerScriptService": {
+  "$path": "src/ServerCode"
+}
+```
+- **CORRECT Filesystem Path:** `src/ServerCode/`
+- **INCORRECT Filesystem Paths:** `src/ServerScriptService/`, `src/server/`
+
+**Scenario 2: `default.project.json` maps `StarterPlayerScripts`**
+```json
+"StarterPlayer": {
+  "$className": "StarterPlayer",
+  "StarterPlayerScripts": {
+    "$path": "src/Client/Entry"
+  }
+}
+```
+- **CORRECT Filesystem Path:** `src/Client/Entry/`
+- **INCORRECT Filesystem Paths:** `src/StarterPlayerScripts/`, `src/StarterPlayer/StarterPlayerScripts/`
+
+## 7. Be Minimal: Define Only What You Need
+
+- **RULE:** Only define services, instances, and paths in `default.project.json` that are actively used, mapped via `$path`, or explicitly configured by the project.
+- **AVOID:** Adding definitions for default Roblox services (like `SoundService`, `Chat`, `TestService`, `LocalizationService`, etc.) if your project does not place any files under them via `$path` or define any specific children/properties for them.
+- **REASON:** Unnecessary definitions clutter the project file and can be misleading.
+
+```json
+// Example (GOOD - Minimal)
+{
+  "name": "MyGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage" // We put shared modules here
+    },
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService" // We put server scripts here
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayerScripts" // We put client scripts here
+      }
+    }
+    // Other services are omitted as they are not used/mapped
+  }
+}
+```
+
+```json
+// Example (BAD - Unnecessary Clutter)
+{
+  "name": "MyGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage"
+    },
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService"
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayerScripts"
+      }
+    },
+    // --- Unnecessary clutter below --- 
+    "Workspace": {
+      "$className": "Workspace"
+    },
+    "ServerStorage": {
+      "$className": "ServerStorage"
+    },
+    "StarterGui": {
+      "$className": "StarterGui"
+    },
+    "StarterPack": {
+      "$className": "StarterPack"
+    },
+    "SoundService": {
+      "$className": "SoundService"
+    },
+    "Chat": {
+      "$className": "Chat"
+    }
+    // etc...
+  }
+}
+```
+
+## 8. Retain Default `$path` Mappings (Usually)
+
+- **RULE:** Generally, **retain** the standard `$path` mappings for common services (like `ReplicatedStorage`, `ServerScriptService`, `ServerStorage`, `StarterGui`, `StarterPack`, `StarterPlayer/StarterPlayerScripts`, `StarterPlayer/StarterCharacterScripts`) pointing to their corresponding `src/` directories, *even if you aren't immediately placing files there*.
+- **AVOID:** Removing these default `$path` entries unless you have a specific, intentional reason (e.g., you are defining the *entire* content of that service virtually within `default.project.json`, or you are mapping it to a completely different path).
+- **REASON:** Removing a default `$path` (e.g., for `StarterGui`) prevents Rojo from syncing *any* files you might later place in the corresponding default directory (`src/StarterGui/`). Keeping the default `$path` maintains standard behavior and flexibility.
+
+```json
+// Example (GOOD - Retains defaults, flexible)
+{
+  "name": "MyGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage" // Kept, even if empty now
+    },
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService" // Used
+    },
+    "ServerStorage": {
+      "$path": "src/ServerStorage" // Kept, even if empty now
+    },
+    "StarterGui": {
+      "$path": "src/StarterGui" // Kept, even if empty now
+    },
+    "StarterPack": {
+      "$path": "src/StarterPack" // Kept, even if empty now
+    },
+    "StarterPlayer": {
+      "StarterCharacterScripts": {
+        "$path": "src/StarterPlayer/StarterCharacterScripts" // Kept
+      },
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts" // Used
+      }
+    }
+    // We can still add specific virtual instances if needed
+  }
+}
+```
+
+```json
+// Example (Potentially BAD - Defaults removed)
+{
+  "name": "MyGame",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage", // $path removed!
+      "MyModule": { "$path": "src/MySpecialModule" } // Only specific mapping
+    },
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService" // Used
+    },
+    "StarterGui": {
+       "$className": "StarterGui" // $path removed! Rojo ignores src/StarterGui/
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts" // Used
+      }
+    }
+    // Problem: If you later add src/StarterGui/MyScreenGui.client.luau,
+    // Rojo won't sync it because StarterGui has no $path.
+  }
+}
+``` 
