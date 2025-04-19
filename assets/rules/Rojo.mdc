@@ -12,36 +12,68 @@ alwaysApply: true
 ## PRIORITY: HIGH
 ## READING-ORDER: 4
 
-# Rojo File Sync Rules
-
 ## Purpose
-To ensure correct placement and recognition of specific files (like `.meta.json` anchors) when using Rojo, especially within directories managed by `$path` in `default.project.json`.
+To ensure correct file placement in Rojo projects by strictly adhering to the project's `default.project.json` mapping.
 
-+ **Note:** For general guidelines on structuring `default.project.json` (like using `$path` vs. virtual instances, minimizing definitions, etc.), consult `projectbestpractices.txt`. This file focuses on specific file-level syncing rules.
+## 1. Understanding `default.project.json`
 
-## 1. Ensuring `.meta.json` Instances Are Created Inside `$path` Directories
+- **Rojo:** Uses `default.project.json` to map your project files to Roblox instances (like Folders, Scripts, Services).
+- **Required Fields:** Every `default.project.json` *must* have a `name` (string) and a `tree` (object).
+- **`tree` Object:** This defines your project's root in Roblox and contains mappings. Keys inside `tree` typically represent Roblox instances.
 
-- **SITUATION:** You are syncing a directory using `$path` (e.g., `"$path": "src/ReplicatedStorage/Events"`) and want to define specific non-script instances *inside* that directory using individual `.meta.json` files (e.g., `src/ReplicatedStorage/Events/MyEvent.meta.json` defining a `RemoteEvent`, `BoolValue`, `Folder`, etc.).
-- **POTENTIAL ISSUE:** Rojo might not reliably create the instance defined in the `.meta.json` file unless a corresponding source file (usually `.luau`) exists alongside it to act as an anchor.
-- **CONSEQUENCE:** Failure to create the instance, leading to runtime errors like `Infinite yield possible` when scripts use `WaitForChild` to find the instance.
-- **RECOMMENDATION:** If you define an instance using a *non-init* `.meta.json` file within a directory managed by `$path`, **also create an empty placeholder `.luau` file with the same base name.**
-- **REASON:** The empty placeholder file acts as an anchor for Rojo to correctly process the associated `.meta.json` when scanning the `$path` directory. Leaving it empty prevents Rojo from attempting to assign its content to invalid properties (like `Source` on a `BoolValue`), avoiding warnings.
-- **EXAMPLE (Correct Structure):**
-  ```plaintext
-  # Filesystem structure
-  src/
-    ReplicatedStorage/
-      Events/                 <-- Synced via "$path": "src/ReplicatedStorage/Events"
-        RoundStateChanged.meta.json  <-- Defines RemoteEvent
-        RoundStateChanged.luau       <-- Corresponding ANCHOR file (MUST exist)
-  ```
+## 2. Core Mapping Properties (`$path`, `$className`, `$properties`)
+
+- **`$path`:** Tells Rojo: "Sync the contents of *this filesystem directory* into this Roblox instance." (e.g., `"src/ReplicatedStorage"`).
+- **`$className`:** Specifies the Roblox class (e.g., `"Folder"`, `"ScreenGui"`). Often used when *not* using `$path` or to define services.
+- **`$properties`:** An object defining properties to set on the instance (e.g., `{"Archivable": false}`). Property formatting rules are in `InitMetaJsonBestPractices.mdc`.
+- **Child Instances:** Any key in the `tree` that *doesn't* start with `$` defines a *named child instance*. The key itself becomes the instance's `Name`.
   ```json
-  // src/ReplicatedStorage/Events/RoundStateChanged.meta.json
-  {
-    "className": "RemoteEvent"
+  // Example: Creates a Folder named "MyFolder" inside ReplicatedStorage
+  "ReplicatedStorage": {
+    "$path": "src/ReplicatedStorage", // Maps the service
+    "MyFolder": {                  // Defines a child instance named "MyFolder"
+      "$className": "Folder"       // Specifies its class
+    }
   }
   ```
-  ```lua
-  -- src/ReplicatedStorage/Events/RoundStateChanged.luau
-  -- This file MUST exist but should be EMPTY.
-  ```
+
+## 3. Path Authority: `default.project.json` is KING
+
+**RULE: The `$path` values in `default.project.json` are the ONLY source of truth for where to put your files when syncing directories.**
+
+- **ALWAYS:** Check `default.project.json` first. Find the Roblox service/instance you want to add to (e.g., `StarterGui`, `ReplicatedStorage`). Look at its `$path` value. Place your new files/folders inside *that exact filesystem directory*.
+- **NEVER:** Guess filesystem paths based on common conventions (`src/client/`, `src/server/`, `src/shared/`, or even matching the service name like `src/StarterGui/`) if they don't match the `$path` specified in *your* `default.project.json`.
+
+**REASONING:** Rojo ONLY looks at the `$path` specified in `default.project.json` for directory syncing. Using any other directory structure *will* result in your code not being placed correctly in the game, causing errors.
+
+## 4. Examples (`$path` in `default.project.json` determines the CORRECT filesystem path)
+
+**Scenario 1: `default.project.json` maps `StarterGui` to `src/Interface`**
+```json
+// default.project.json (excerpt)
+"StarterGui": {
+  "$path": "src/Interface"
+}
+```
+- **CORRECT Filesystem Path:** `src/Interface/` (e.g., `src/Interface/MyGui/Handler.client.luau`).
+- **INCORRECT Filesystem Paths:** `src/StarterGui/`, `src/client/StarterGui/`.
+
+**Scenario 2: `default.project.json` maps `ReplicatedStorage` to `src/SharedCode`**
+```json
+// default.project.json (excerpt)
+"ReplicatedStorage": {
+  "$path": "src/SharedCode"
+}
+```
+- **CORRECT Filesystem Path:** `src/SharedCode/` (e.g., `src/SharedCode/Utilities.luau`).
+- **INCORRECT Filesystem Paths:** `src/ReplicatedStorage/`, `src/shared/`.
+
+**Scenario 3: `default.project.json` uses standard names**
+```json
+// default.project.json (excerpt)
+"ServerScriptService": {
+  "$path": "src/ServerScriptService"
+}
+```
+- **CORRECT Filesystem Path:** `src/ServerScriptService/` (e.g., `src/ServerScriptService/MainLoop.server.luau`).
+- **INCORRECT Filesystem Path:** `src/server/` (unless `$path` explicitly points there).
