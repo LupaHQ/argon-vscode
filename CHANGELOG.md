@@ -6,7 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.24...HEAD
+## [0.0.25] - 2025-04-19
+
+[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.25...HEAD
+[0.0.25]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.25
 
 ## [0.0.24] - 2024-06-06
 
