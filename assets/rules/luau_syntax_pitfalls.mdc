@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Common Luau Syntax Pitfalls and Keywords
+globs: **/*
+alwaysApply: true
+---
+
+## PRIORITY: MEDIUM
+## READING-ORDER: 7 # After init.meta.json rules
+
+# Common Luau Syntax Issues
+
+This file highlights frequently encountered syntax errors or misunderstandings in Luau.
+
+## 1. Conditional Statements: `elseif` vs `elif` / `else if`
+
+- **RULE:** Use `elseif` (one word) for subsequent conditional checks.
+- **COMMON MISTAKE:** Using `elif` or `else if` (two words) causes errors.
+
+- **INCORRECT (`elif`):**
+  ```luau
+  if condition1 then
+    -- ...
+  elif condition2 then -- ERROR: Invalid keyword
+    -- ...
+  end
+  ```
+- **INCORRECT (`else if`):**
+  ```luau
+  if condition1 then
+    -- ...
+  else if condition2 then -- ERROR: Creates nested if, needs extra 'end'
+    -- ...
+  end -- Missing outer 'end'
+  ```
+- **CORRECT (`elseif`):**
+  ```luau
+  if condition1 then
+    -- ...
+  elseif condition2 then -- CORRECT
+    -- ...
+  else
+    -- ...
+  end
+  ``` 

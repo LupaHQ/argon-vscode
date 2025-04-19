@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+<<<<<<< HEAD
 [Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.25...HEAD
 
 ## [0.0.25] - 2024-03-21
@@ -33,6 +34,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Fixed PATH variable handling on Windows systems
 - Improved error handling during installation process
+=======
+## [0.0.25] - 2025-04-19
+
+[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.25...HEAD
+[0.0.25]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.25
+
+## [0.0.24] - 2024-06-06
+
+### Added
+
+- Added new initmetajsonbestpractices cursor rules.
+
+## [0.0.23] - 2024-06-06
+
+### Changed
+
+- Integrated latest changes from main branch.
+- Updated internal development configuration (Cursor rules).
+>>>>>>> a632e8dec1ed3a943d3d276bd5394a1bbf07887d
 
 ## [0.0.22] - YYYY-MM-DD
 
@@ -219,3 +239,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 [0.0.21]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.21
 [0.0.22]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...0.0.22
+[0.0.23]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...0.0.23
+[0.0.24]: https://github.com/LupaHQ/argon-vscode/compare/0.0.23...0.0.24
