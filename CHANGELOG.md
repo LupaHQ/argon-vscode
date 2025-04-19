@@ -6,7 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.23...HEAD
+
+## [0.0.23] - 2024-03-21
+
+### Changed
+
+- Simplified installer logging for better user experience
+- Improved Windows installation reliability
+- Removed unnecessary debug messages during installation
+
+### Fixed
+
+- Fixed PATH variable handling on Windows systems
+- Improved error handling during installation process
 
 ## [0.0.22] - YYYY-MM-DD
 

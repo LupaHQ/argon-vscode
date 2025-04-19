@@ -118,12 +118,25 @@ export function getProjectAddress(project: string): {
 
 export function getVersion(): string | undefined {
   try {
+    const execPath =
+      path.join(os.homedir(), ".argon", "bin", "argon") +
+      (os.platform() === "win32" ? ".exe" : "")
+
     return childProcess
-      .execSync(`argon --version`)
+      .execFileSync(execPath, ["--version"])
       .toString()
       .replace("argon-rbx ", "")
       .trim()
-  } catch {}
+  } catch (err) {
+    // Try PATH-based lookup as fallback
+    try {
+      return childProcess
+        .execSync(`argon --version`)
+        .toString()
+        .replace("argon-rbx ", "")
+        .trim()
+    } catch {}
+  }
 }
 
 export function updatePathVariable() {
@@ -133,6 +146,7 @@ export function updatePathVariable() {
   }
 
   try {
+    const argonBinPath = path.join(os.homedir(), ".argon", "bin")
     // Use fully qualified path to reg.exe instead of relying on PATH
     const regExePath = path.join(
       process.env.SystemRoot || "C:\\Windows",
@@ -140,19 +154,39 @@ export function updatePathVariable() {
       "reg.exe",
     )
 
-    let paths = childProcess
+    // Get current PATH
+    let currentPath = childProcess
       .execSync(
         `"${regExePath}" query "HKEY_CURRENT_USER\\Environment" /v PATH`,
       )
       .toString()
 
-    const index = paths.indexOf("_SZ")
-
+    const index =
+      currentPath.indexOf("REG_EXPAND_SZ") || currentPath.indexOf("REG_SZ")
     if (index !== -1) {
-      paths = paths.substring(index + 3)
+      currentPath = currentPath.substring(index + 12).trim()
     }
 
-    process.env.PATH = paths.trim()
+    // Check if our path is already in there
+    if (!currentPath.toLowerCase().includes(argonBinPath.toLowerCase())) {
+      // Add our path
+      const newPath = currentPath
+        ? `${currentPath};${argonBinPath}`
+        : argonBinPath
+
+      // Update the registry
+      childProcess.execSync(
+        `"${regExePath}" add "HKEY_CURRENT_USER\\Environment" /v PATH /t REG_EXPAND_SZ /d "${newPath}" /f`,
+      )
+
+      // Update current process PATH
+      process.env.PATH = newPath
+
+      // Broadcast WM_SETTINGCHANGE using rundll32 (available on all Windows versions)
+      childProcess.execSync(
+        `rundll32 user32.dll,SendMessageTimeout HWND_BROADCAST WM_SETTINGCHANGE 0 "Environment" SMTO_ABORTIFHUNG 5000`,
+      )
+    }
   } catch (err) {
     logger.error(`Failed to update PATH: ${err}`)
     // Continue without updating PATH - better than crashing
