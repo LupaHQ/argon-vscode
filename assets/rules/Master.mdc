@@ -29,6 +29,32 @@ alwaysApply: true
 - IMPORTANT: SCRIPTS NAMED `init.client.luau`, `init.server.luau`, or `init.luau` transform their PARENT DIRECTORY into the corresponding script type.
     - EXAMPLE: `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript.
 - IMPORTANT: YOU MUST RETURN EXACTLY ONE VALUE FROM A `ModuleScript`
+- IMPORTANT: LOCALS INSIDE A `ModuleScript` ARE PRIVATE unless explicitly added to the returned value (usually a table). Other scripts using `require()` CANNOT access internal local variables directly.
+    - EXAMPLE (Correct Export):
+      ```lua
+      -- Inside MyModule.luau
+      local PRIVATE_CONSTANT = 10
+      local function privateHelper()
+          return PRIVATE_CONSTANT * 2
+      end
+
+      local module = {}
+
+      module.PUBLIC_VALUE = 5
+      function module.doSomething()
+          return module.PUBLIC_VALUE + privateHelper() -- Internal functions can access module locals
+      end
+
+      return module
+      ```
+      ```lua
+      -- Inside another script
+      local MyModule = require(path.to.MyModule)
+      print(MyModule.PUBLIC_VALUE) -- Output: 5
+      print(MyModule.doSomething()) -- Output: 25
+      print(MyModule.PRIVATE_CONSTANT) -- Output: nil (Error in strict mode) - Cannot access internal local
+      -- MyModule.privateHelper() -- This would cause an error - function not in returned table
+      ```
 - IMPORTANT: YOU MUST DECLARE FUNCTIONS BEFORE REFERENCING OR CALLING THEM! Forward declarations (`local function foo() end` or just `local foo`) are useful, but ensure they are complete statements if defined at the top level. Incomplete declarations like `local function foo` without a definition or `end` can cause parsing errors. Prefer defining functions fully before use, or use `local foo` and assign `foo = function() ... end` later if necessary.
 - IMPORTANT: ENSURE ALL CODE IS SYNTACTICALLY CORRECT LUAU. Errors like missing `end` statements, using incorrect keywords (e.g., `elif` instead of `elseif`), or improperly structured blocks (especially nested functions) will prevent scripts from running.
     - **EXAMPLE (Incorrect):**
