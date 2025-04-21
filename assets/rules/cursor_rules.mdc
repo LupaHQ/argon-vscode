@@ -12,6 +12,8 @@ alwaysApply: true
 ## PRIORITY: HIGHEST
 ## READING-ORDER: 1
 
+Do not edit `default.project.json`.
+
 1. Always read `lemonlogs.txt` (at the current root directory) at the very end of your output (when you're about to finish all execution flow).
 2. After reading it, do <wrap_execution>
 3. After doing <wrap execution>, do <guarantee integrity>.
