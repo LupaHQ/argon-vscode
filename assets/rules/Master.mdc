@@ -30,8 +30,11 @@ alwaysApply: true
         - CORRECT: `CombatUtilities.luau` -> Creates a ModuleScript named "CombatUtilities"
         - INCORRECT: `SprintHandler.luau` -> This would create a ModuleScript, not the intended LocalScript
         - WARNING: Using the wrong suffix (e.g., `.server.luau`) for a file you intend to use as a `ModuleScript` will cause `require()` to fail, as `require()` only works on `ModuleScript` instances.
-- IMPORTANT: SCRIPTS NAMED `init.client.luau`, `init.server.luau`, or `init.luau` transform their PARENT DIRECTORY into the corresponding script type.
-    - EXAMPLE: `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript.
+- IMPORTANT: `init.*.luau` scripts vs `init.meta.json`:
+  - **`init.client.luau`, `init.server.luau`, `init.luau`:** These files transform their PARENT DIRECTORY into the corresponding *script* type (LocalScript, Script, ModuleScript).
+  - **`init.meta.json`:** This file transforms its PARENT DIRECTORY into the *Instance* specified by its `className` property (e.g., Folder, BoolValue, RemoteEvent). See `initmetajsonbestpractices.txt` for details.
+    - EXAMPLE (`init` script): `src/SomeFeature/init.client.luau` makes the `SomeFeature` folder become a LocalScript named "SomeFeature".
+    - EXAMPLE (`init.meta.json`): `src/GameData/Settings/init.meta.json` (with `{"className": "Folder"}`) makes the `Settings` folder become a Folder instance named "Settings".
 - IMPORTANT: YOU MUST RETURN EXACTLY ONE VALUE FROM A `ModuleScript`
 - IMPORTANT: LOCALS INSIDE A `ModuleScript` ARE PRIVATE unless explicitly added to the returned value (usually a table). Other scripts using `require()` CANNOT access internal local variables directly.
     - EXAMPLE (Correct Export):
