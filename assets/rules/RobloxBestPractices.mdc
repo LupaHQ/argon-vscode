@@ -38,28 +38,129 @@ alwaysApply: true
       end
       ```
 
-- **WARNING: `WaitForChild` & `require()` Deadlocks:** Be cautious using `WaitForChild` in top-level code of scripts, *especially* if that script is `require`'d by another script that might be responsible for creating the instance being waited for. This can lead to deadlocks: Script A requires Script B -> Script B's top-level code runs and calls `WaitForChild("Thing")` -> Script A was supposed to create "Thing" *after* the require, but it's stuck waiting for Script B to finish loading. 
-    - **SOLUTION 1:** Ensure the requiring script (Script A) finds/creates the necessary instance *before* it `require`s the dependent script (Script B).
-    - **SOLUTION 2 (Lazy Loading):** Have the dependent script (Script B) look up the instance inside its functions *when they are called*, rather than at the top level. Assume the instance will exist by the time the function is used.
-      ```luau
-      -- Script B (ModuleScript)
-      local module = {}
+- **CRITICAL: `WaitForChild` & `require()` Deadlocks:** Be extremely cautious using `WaitForChild` in top-level code of ModuleScripts, as this can cause deadlocks and prevent your game from loading. This issue happens in two critical scenarios:
 
-      -- AVOID: Top-level WaitForChild - potential deadlock if required too early
-      -- local Thing = workspace:WaitForChild("Thing") 
+  1. **Circular WaitForChild Dependencies:** When Module A waits for an instance that Module B is responsible for creating, but Module B also (directly or indirectly) requires Module A.
+  
+     - **EXAMPLE (DEADLOCK SCENARIO):**
+       ```luau
+       -- GameManager.luau (ModuleScript)
+       local ServerStorage = game:GetService("ServerStorage")
+       -- DANGEROUS: This WaitForChild blocks module execution
+       local eventsFolder = ServerStorage:WaitForChild("GameEvents")
+       
+       local module = {}
+       -- Rest of the module...
+       return module
+       
+       -- GameInitializer.server.luau (Script)
+       local GameManager = require(path.to.GameManager) -- This BLOCKS until WaitForChild completes
+       
+       -- Create the folder that GameManager is waiting for
+       local eventsFolder = Instance.new("Folder")
+       eventsFolder.Name = "GameEvents"
+       eventsFolder.Parent = game:GetService("ServerStorage")
+       -- This code NEVER runs because GameManager is stuck waiting!
+       ```
+     
+     - **SOLUTION 1 (INITIALIZATION FUNCTION):**
+       ```luau
+       -- GameManager.luau (ModuleScript)
+       local ServerStorage = game:GetService("ServerStorage")
+       
+       local module = {}
+       
+       function module.Initialize()
+           -- Move WaitForChild inside a function that's called AFTER all instances are created
+           local eventsFolder = ServerStorage:WaitForChild("GameEvents")
+           -- Setup that requires the events folder...
+       end
+       
+       return module
+       
+       -- GameInitializer.server.luau (Script)
+       local GameManager = require(path.to.GameManager) -- This returns immediately
+       
+       -- Create the folder
+       local eventsFolder = Instance.new("Folder")
+       eventsFolder.Name = "GameEvents"
+       eventsFolder.Parent = game:GetService("ServerStorage")
+       
+       -- NOW it's safe to initialize
+       GameManager.Initialize()
+       ```
+     
+     - **SOLUTION 2 (FindFirstChild WITH RETRY):**
+       ```luau
+       -- GameManager.luau (ModuleScript)
+       local ServerStorage = game:GetService("ServerStorage")
+       
+       local module = {}
+       
+       -- Check non-blocking for resources
+       local function getEventsFolder()
+           local folder = ServerStorage:FindFirstChild("GameEvents")
+           if not folder then
+               warn("GameEvents folder not found yet")
+               return nil
+           end
+           return folder
+       end
+       
+       function module.DoSomething()
+           local eventsFolder = getEventsFolder()
+           if not eventsFolder then
+               -- Handle missing folder case or retry logic
+               return
+           end
+           -- Use the folder...
+       end
+       
+       return module
+       ```
 
-      function module.UseThing()
-          -- PREFER: Find the instance when the function is actually called
-          local Thing = workspace:FindFirstChild("Thing") 
-          if Thing then
-              print("Found Thing:", Thing)
-          else
-              warn("UseThing called but Thing does not exist!")
-          end
-      end
-
-      return module
-      ```
+  2. **Game Services and Dependencies:** When modules wait for instances that might not exist until later in the game lifecycle.
+  
+     - **EXAMPLE (DANGEROUS):**
+       ```luau
+       -- MapManager.luau (ModuleScript)
+       local ReplicatedStorage = game:GetService("ReplicatedStorage")
+       
+       -- DANGEROUS: Top-level WaitForChild can deadlock if required during game start
+       local remoteEvent = ReplicatedStorage:WaitForChild("RoundStateChanged") 
+       
+       local module = {}
+       -- Rest of module...
+       return module
+       ```
+     
+     - **SOLUTION (LAZY LOADING):**
+       ```luau
+       -- MapManager.luau (ModuleScript)
+       local ReplicatedStorage = game:GetService("ReplicatedStorage")
+       
+       local module = {}
+       
+       -- Private helper that gets called only when needed
+       local function getRemoteEvent()
+           -- Find first, and only wait if needed at usage time
+           local event = ReplicatedStorage:FindFirstChild("RoundStateChanged")
+           if not event then
+               warn("Remote event not found, will wait")
+               event = ReplicatedStorage:WaitForChild("RoundStateChanged", 10)
+           end
+           return event
+       end
+       
+       function module.NotifyClients(state)
+           local remoteEvent = getRemoteEvent()
+           if remoteEvent then
+               remoteEvent:FireAllClients(state)
+           end
+       end
+       
+       return module
+       ```
 
 - **MANAGING DEFAULT ENGINE FEATURES:** When implementing custom systems (like spawning, rounds, etc.), be mindful of default Roblox behaviors that might conflict. Disable or manage these features explicitly.
     - **EXAMPLE (Custom Spawning):** If implementing custom teleport-based spawning, disable default `SpawnLocation` objects (`spawnLocation.Enabled = false`) during periods when custom spawning is active to prevent interference.

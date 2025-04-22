@@ -30,6 +30,55 @@ alwaysApply: true
         - CORRECT: `CombatUtilities.luau` -> Creates a ModuleScript named "CombatUtilities"
         - INCORRECT: `SprintHandler.luau` -> This would create a ModuleScript, not the intended LocalScript
         - WARNING: Using the wrong suffix (e.g., `.server.luau`) for a file you intend to use as a `ModuleScript` will cause `require()` to fail, as `require()` only works on `ModuleScript` instances.
+- **CRITICAL: SCRIPT TYPE RESTRICTIONS AND REQUIRING MODULES**
+    - **REQUIREMENT RULE:** You can ONLY use `require()` on `ModuleScript` instances (files with `.luau` extension). 
+    - **INCORRECT:** Trying to `require()` a `.server.luau` or `.client.luau` file will fail with "Attempted to call require with invalid argument(s)."
+    - **EXAMPLE (INCORRECT):**
+      ```luau
+      -- GameInitializer.server.luau
+      local ServerModule = require(game.ServerScriptService.SomeServerScript) -- ERROR: SomeServerScript is a Script (.server.luau), not a ModuleScript
+      ```
+    - **EXAMPLE (CORRECT):**
+      ```luau
+      -- GameInitializer.server.luau
+      local ServerModule = require(game.ServerScriptService.SomeModule) -- CORRECT: SomeModule is a ModuleScript (.luau)
+      ```
+- **CRITICAL: AVOID CIRCULAR DEPENDENCIES**
+    - **CIRCULAR DEPENDENCY RULE:** ModuleScripts must not directly or indirectly require each other in a circular pattern.
+    - **WARNING:** Circular dependencies cause deadlocks or unpredictable behavior.
+    - **INCORRECT PATTERN:**
+      ```luau
+      -- ModuleA.luau
+      local ModuleB = require(path.to.ModuleB)
+      
+      -- ModuleB.luau
+      local ModuleA = require(path.to.ModuleA) -- ERROR: Creates a circular dependency!
+      ```
+    - **CORRECT SOLUTIONS:**
+      1. **Pass as Parameter:** Pass one module to the other as a parameter rather than requiring it.
+         ```luau
+         -- GameInitializer.server.luau
+         local ModuleA = require(path.to.ModuleA)
+         local ModuleB = require(path.to.ModuleB)
+         ModuleB.Initialize(ModuleA) -- Pass ModuleA to ModuleB
+         ```
+      2. **Use Events:** Use BindableEvents for communication between modules.
+         ```luau
+         -- ModuleA.luau
+         local module = {}
+         -- No require to ModuleB
+         return module
+         
+         -- ModuleB.luau
+         local module = {}
+         -- No require to ModuleA
+         module.Initialize = function()
+             -- Use events for communication
+             local event = ServerStorage:WaitForChild("SomeEvent")
+             event.Event:Connect(function() end)
+         end
+         return module
+         ```
 - IMPORTANT: `init.*.luau` scripts vs `init.meta.json`:
   - **`init.client.luau`, `init.server.luau`, `init.luau`:** These files transform their PARENT DIRECTORY into the corresponding *script* type (LocalScript, Script, ModuleScript).
   - **`init.meta.json`:** This file transforms its PARENT DIRECTORY into the *Instance* specified by its `className` property (e.g., Folder, BoolValue, RemoteEvent). See `initmetajsonbestpractices.txt` for details.
