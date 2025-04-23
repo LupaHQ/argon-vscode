@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+<<<<<<< HEAD
 [Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...HEAD
 
 ## [0.0.26] - 2025-04-27
@@ -16,6 +17,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Improved plugin installation and update processes to use the new filename
 
 [0.0.26]: https://github.com/LupaHQ/argon-vscode/compare/0.0.25...0.0.26
+=======
+## [0.0.26] - 2025-04-23
+
+[unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...HEAD
+[0.0.26]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.26
+>>>>>>> 20775349aa5989b9b4d2678df8fc4bfe3b403675
 
 ## [0.0.25] - 2024-03-21
 
