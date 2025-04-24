@@ -1,0 +1,16 @@
+---
+description: 
+globs: *.server.luau
+alwaysApply: false
+---
+---
+description: Server bootstrap guard – *.server.luau
+globs: **/*.server.luau
+alwaysApply: false
+---
+
+*Runs automatically on the **server**; **cannot** be `require()`.*
+
+- Keep top-level code side-effect-safe (no long loops).  
+- Use services via `game:GetService()`.  
+- If you plan to return a table → rename to `.luau` instead.

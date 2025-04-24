@@ -8,7 +8,7 @@ import { getCurrentDir } from "../util" // Use correct relative path
 import { State } from "../state" // Import State if needed by run signature
 import { Item } from "." // Import Item type from index
 import { writeMcpConfig } from "../mcpConfig"
-import { syncRules } from "../ruleSync"
+import { syncRules, syncDocs } from "../ruleSync"
 
 export const item: Item = {
   label: "$(rocket) Start Lemonade",
@@ -45,6 +45,9 @@ async function ensureCursorSetup(
 
   // Sync rule files
   await syncRules(context)
+
+  // Sync doc files
+  await syncDocs(context)
 
   // Configure MCP server
   await writeMcpConfig()

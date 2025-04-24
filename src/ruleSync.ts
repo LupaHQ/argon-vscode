@@ -90,3 +90,79 @@ export async function syncRules(
     return false
   }
 }
+
+/**
+ * Syncs the documentation files from the extension to the workspace docs directory
+ * @param context VS Code extension context
+ * @returns True if docs were synced successfully, false otherwise
+ */
+export async function syncDocs(
+  context: vscode.ExtensionContext,
+): Promise<boolean> {
+  const workspaceRoot = getCurrentDir()
+  if (!workspaceRoot) {
+    logger.warn("Cannot sync docs: No workspace folder open.", false)
+    return false
+  }
+
+  // Ensure root docs directory exists
+  const docsPath = path.join(workspaceRoot, "docs")
+  if (!fs.existsSync(docsPath)) {
+    try {
+      fs.mkdirSync(docsPath)
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error)
+      logger.error(
+        `Failed to create root docs directory: ${errMsg}`,
+        false,
+        true,
+      )
+      return false
+    }
+  }
+
+  // Copy the doc files from the extension's assets
+  try {
+    const docAssetsPath = vscode.Uri.joinPath(
+      context.extensionUri,
+      "assets",
+      "docs", // Source directory
+    ).fsPath
+
+    if (fs.existsSync(docAssetsPath)) {
+      const docFiles = fs.readdirSync(docAssetsPath)
+      let copiedFiles = 0
+
+      for (const file of docFiles) {
+        const srcPath = vscode.Uri.joinPath(
+          context.extensionUri,
+          "assets",
+          "docs", // Source directory
+          file,
+        ).fsPath
+        const destPath = path.join(docsPath, file) // Destination directory
+
+        // Use copyFileSync to overwrite if exists
+        fs.copyFileSync(srcPath, destPath)
+        copiedFiles++
+      }
+
+      logger.info(
+        `Successfully synced ${copiedFiles} doc files to ${docsPath}`,
+        false,
+      )
+      return true
+    } else {
+      logger.warn(
+        `Extension assets/docs directory not found at: ${docAssetsPath}`,
+        false,
+      )
+      // Don't fail if the source dir doesn't exist yet
+      return true
+    }
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error)
+    logger.error(`Failed to sync doc files: ${errMsg}`, false, true)
+    return false
+  }
+}

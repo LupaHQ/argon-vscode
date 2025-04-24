@@ -1,0 +1,17 @@
+---
+description: 
+globs: *.luau
+alwaysApply: false
+---
+---
+description: ModuleScript guard – applies to all *.luau files
+globs: **/*.luau
+alwaysApply: false
+---
+
+*Skip* if filename ends with `.server.luau` or `.client.luau` — those have their own rules.
+*This file is a **ModuleScript** (`.luau` ⇒ ModuleScript).*
+
+- Return **exactly one** value (table / function).  
+- Safe to `require()` from server **or** client.  
+- If you need auto-run behaviour, rename to `.server.luau` or `.client.luau`.

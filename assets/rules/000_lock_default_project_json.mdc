@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: HARD-LOCK default.project.json
+globs: **/*
+alwaysApply: true
+---
+
+### FROZEN BEDROCK – DO NOT TOUCH  
+The JSON in `default.project.json` is immutable **except** for
+appending brand-new child keys *under* an existing service (for example, `BindableEvent`).
+
+##### ALLOWED
+```jsonc
+"ReplicatedStorage": {
+  "$path": "src/ReplicatedStorage",        // ← must stay
+  "NewRemote": { "$className": "RemoteEvent" }   // ← you may add
+}
+```
+
+##### FORBIDDEN & AUTO-REVERTED
+- editing / deleting any `$path`.
+- adding `$className` to a block that already has `$path` is wrong. Do *not* do this.
+```jsonc
+    // FORBIDDEN: $className and $path on the same service block
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage",
+      "$className": "ReplicatedStorage", // ← CONFLICTS with $path
+    }
+```
+- deleting a root service (for example, `StarterGui`).
+- changing the root `"name"`.
+- adding new top-level services (for example, `"Server"` or `"Lighting"`).
+
+Need something fancier? **Create a folder / `init.meta.json`** inside the synced `$path` instead of touching `default.project.json`.

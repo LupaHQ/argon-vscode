@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Always read lemonlogs.txt at the very end.
+globs: **/*
+alwaysApply: true
+---
+
+<!-- guard – skip until flow is finishing -->
+
+1. Open and read **`lemonlogs.txt`** in the project root.  
+2. Make its contents available for the follow-on rules (no other logic here).
+
+> Detail guide: `mdc:docs/wrap_execution.md`

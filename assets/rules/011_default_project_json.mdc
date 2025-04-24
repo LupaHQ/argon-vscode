@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: default.project.json guard & pointers
+globs: default.project.json
+alwaysApply: true
+---
+
+*Key rules (full HOW-TO → `docs/default_project_json_faq.md`)*
+
+- **Do NOT touch** the root `"name"` **or** any first-level service keys  
+  (`Workspace`, `ReplicatedFirst`, `ReplicatedStorage`, etc.).  
+  *They are frozen for this project.*
+- **Adding code or assets _rarely_ needs an edit here.**  
+  1. If a folder already exists under a `$path`, just add files there.  
+  2. If you need a brand-new **instance** (for example, RemoteEvent) _and_ you don’t want a real folder,  
+     add a **child entry** inside the existing service block (see §3 of the FAQ).  
+  _Everything else in this JSON stays 100 % frozen._
+
+- `$path` ⇒ sync dir; `$className` ⇒ virtual instance; `$properties` ⇒ overrides.
+- One technique per child: *either* `$path` **or** a virtual entry, never both.
+Note: Just as children require a single definition type, the service block itself cannot have both `$path` and `$className`. See rule `000_lock_default_project_json.mdc` for details.
+- If a `.meta.json` lives under a `$path` dir, add an empty `.luau` anchor.
+
+See also  
+`mdc:020_init_meta_json_best_practices.mdc` · `012_rojo_file_sync.mdc`

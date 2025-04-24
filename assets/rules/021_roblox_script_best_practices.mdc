@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: roblox script best-practices (concise)
+globs: **/*
+alwaysApply: true
+---
+
+*Core reminders (full patterns → `docs/roblox_script_patterns.md`)*
+
+- Client ↔ Server: only via Remotes.
+- Use `FindFirstChild` for static items; `WaitForChild` **only** for dynamic ones.
+- Never `WaitForChild` at ModuleScript top-level (deadlock risk).
+- Build UI at run-time with `Instance.new()`.
+- File suffix ⇒ script type (`.client.luau`, `.server.luau`, `.luau`).
+- `require` works **only** on ModuleScripts; avoid circular chains.
+- Respect engine type expectations (`CFrame`, `Vector3`, etc.).
+- Prefer specific event connections (tile.Touched vs Humanoid.Touched).
+- Follow naming conventions (PascalCase / camelCase / SCREAMING_SNAKE_CASE).
+
+See also
+`mdc:022_luau_syntax_pitfalls.mdc` · `docs/luau_syntax_gotchas.md`
