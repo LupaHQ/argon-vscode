@@ -30,15 +30,32 @@ export async function syncRules(
     }
   }
 
-  // Ensure rules directory exists
+  // Delete existing rules directory if it exists, then recreate it
   const rulesPath = path.join(cursorPath, "rules")
+  if (fs.existsSync(rulesPath)) {
+    try {
+      // Force removal of the directory and its contents
+      fs.rmSync(rulesPath, { recursive: true, force: true })
+      logger.info(`Removed existing directory: ${rulesPath}`, false)
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error)
+      logger.error(
+        `Failed to remove existing .cursor/rules directory: ${errMsg}`,
+        false,
+        true,
+      )
+      return false // Stop if we cannot clean the old directory
+    }
+  }
+
+  // Always create the rules directory after attempting removal
   if (!fs.existsSync(rulesPath)) {
     try {
       fs.mkdirSync(rulesPath)
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : String(error)
       logger.error(
-        `Failed to create .cursor/rules directory: ${errMsg}`,
+        `Failed to recreate .cursor/rules directory: ${errMsg}`,
         false,
         true,
       )
