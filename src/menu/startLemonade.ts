@@ -4,7 +4,7 @@ import * as fs from "fs"
 import * as argon from "../argon" // Use correct relative path
 import * as config from "../config" // Use correct relative path
 import * as logger from "../logger" // Import logger
-import { getCurrentDir } from "../util" // Use correct relative path
+import { getCurrentDir, findProjects } from "../util" // Add findProjects import
 import { State } from "../state" // Import State if needed by run signature
 import { Item } from "." // Import Item type from index
 import { writeMcpConfig } from "../mcpConfig"
@@ -27,11 +27,36 @@ const REQUIRED_SRC_DIRS = [
   "Workspace",
 ]
 
+// Function to check if the current workspace is an Argon project
+export async function isArgonProject(workspaceRoot: string): Promise<boolean> {
+  // Check for .project.json files
+  try {
+    const hasProjectFile = findProjects().length > 0
+
+    // Quick check if there's a project file
+    if (!hasProjectFile) {
+      return false
+    }
+
+    // For a more complete check, verify the src directory structure
+    return await checkSrcStructure(workspaceRoot)
+  } catch (error) {
+    // If findProjects throws an error (e.g., no workspace folder), it's not an Argon project
+    return false
+  }
+}
+
 // Helper function to set up .cursor directory and files
 async function ensureCursorSetup(
   workspaceRoot: string,
   context: vscode.ExtensionContext,
 ) {
+  // Only set up cursor if this is an Argon project
+  if (!(await isArgonProject(workspaceRoot))) {
+    // Skip cursor setup for non-Argon projects
+    return
+  }
+
   const cursorPath = path.join(workspaceRoot, ".cursor")
   if (!fs.existsSync(cursorPath)) {
     try {
@@ -88,9 +113,9 @@ export async function run(_state: State, context: vscode.ExtensionContext) {
 
   await ensureCursorSetup(workspaceRoot, context)
 
-  const hasStructure = await checkSrcStructure(workspaceRoot)
+  const isArgon = await isArgonProject(workspaceRoot)
 
-  if (!hasStructure) {
+  if (!isArgon) {
     const folderName = path.basename(workspaceRoot)
     const choice = await vscode.window.showWarningMessage(
       `Your setup ('${folderName}') doesn't have the required Lemonade structure yet. Initialize it now?`,

@@ -3,6 +3,7 @@ import * as path from "path"
 import * as fs from "fs"
 import * as logger from "./logger"
 import { getCurrentDir } from "./util"
+import { isArgonProject } from "./menu/startLemonade"
 
 /**
  * Syncs the rule files from the extension to the workspace .cursor/rules directory
@@ -14,7 +15,12 @@ export async function syncRules(
 ): Promise<boolean> {
   const workspaceRoot = getCurrentDir()
   if (!workspaceRoot) {
-    logger.warn("Cannot sync rules: No workspace folder open.", false)
+    logger.error("No workspace folder open", false, false)
+    return false
+  }
+
+  // Skip rule syncing for non-Argon projects
+  if (!(await isArgonProject(workspaceRoot))) {
     return false
   }
 

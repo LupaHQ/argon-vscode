@@ -3,6 +3,7 @@ import * as fs from "fs"
 import * as os from "os"
 import * as logger from "./logger"
 import { getCurrentDir } from "./util"
+import { isArgonProject } from "./menu/startLemonade"
 
 /**
  * Writes MCP configuration to the workspace .cursor directory
@@ -10,7 +11,12 @@ import { getCurrentDir } from "./util"
 export async function writeMcpConfig(): Promise<void> {
   const workspaceRoot = getCurrentDir()
   if (!workspaceRoot) {
-    logger.warn("Cannot write mcp.json: No workspace folder open.", false)
+    logger.error("No workspace folder open", false, false)
+    return
+  }
+
+  // Skip MCP config for non-Argon projects
+  if (!(await isArgonProject(workspaceRoot))) {
     return
   }
 
