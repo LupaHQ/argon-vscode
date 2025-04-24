@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: common Luau syntax pitfalls
+globs: **/*
+alwaysApply: true
+---
+
+### Eval sheet  (full walk-through → `docs/luau_syntax_gotchas.md`)
+
+| Pitfall | Wrong | Correct |
+|---------|-------|---------|
+| `elif`, `else if` | `elif x then` | `elseif x then` |
+| Missing `end`     | nested funcs  | count & close every block |
+| Mis-ordered params| `Vector3.new(x,z,y)` | `Vector3.new(x,y,z)` |
+| Numeric for-loop  | `for i,v in ipairs` | `for i = 1,#t do` |
+
+> Run the table before commit: it catches 90 % of compile-time errors.

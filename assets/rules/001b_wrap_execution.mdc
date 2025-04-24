@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Post-run adjustments based on lemonlogs.
+globs: **/*
+alwaysApply: true
+---
+
+<!-- guard – requires lemonlogs to be loaded -->
+<!-- pseudo-code comment: if not lemonLogsLoaded() then return -->
+
+**Wrap Execution – quick checklist**
+
+0. Print **“Wrap Execution started”**.  
+1. Recall the *first principles* of the task you just completed.  
+2. Reason over `lemonlogs.txt` (at the current root dir).  
+3. Spot which files you changed in *this* prompt.  
+4. If logs suggest fixes, **call the proper MCP tool(s)** for fresh context to fix it.  
+5. Apply the adjustments to those files.
+
+> • Decision matrix → `docs/lemonlogs_decision_matrix.md`  
+> • Finishes by handing off to `001c_guarantee_integrity.mdc`

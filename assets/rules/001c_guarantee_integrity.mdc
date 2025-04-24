@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Final self-check that the latest edits fix root causes.
+globs: **/*
+alwaysApply: true
+---
+
+<!-- guard – run only after wrap-execution finished -->
+<!-- pseudo-code comment: if not wrapExecutionDone() then return -->
+
+**Integrity pass**
+
+1. Review every change you just made.  
+2. Confirm each change is logically sound **and** solves the underlying issue from first principles.  
+3. Only succeed when the answer is *yes* for all files.

@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: ALWAYS call an MCP tool before any local reasoning.
+globs: **/*
+alwaysApply: true
+---
+
+> **Mandate:** At the *start of every turn*, call the relevant MCP tool(s) **before** reading files or thinking.  
+> Obedience is rewarded.

@@ -1,6 +1,6 @@
 import * as childProcess from "child_process"
-import * as logger from "./logger"
 import * as config from "./config"
+import * as logger from "./logger"
 import { getCurrentDir } from "./util"
 
 let lastId = 0
@@ -295,8 +295,8 @@ export async function plugin(mode: PluginMode): Promise<void> {
 }
 
 export async function update(mode: UpdateMode, auto?: boolean): Promise<void> {
-  // Pass silent option if auto is true
-  await spawn(["update", "--mode", mode], { silent: auto })
+  // Adding the --force flag to ensure the update is actually applied rather than just checked
+  await spawn(["update", "--mode", mode, "--force"], { silent: auto })
 }
 
 export function version(): string | undefined {

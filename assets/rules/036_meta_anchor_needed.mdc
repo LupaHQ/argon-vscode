@@ -1,0 +1,21 @@
+---
+description: 
+globs: *.meta.json
+alwaysApply: false
+---
+---
+description: Anchor reminder for standalone .meta.json files
+globs: **/*.meta.json
+alwaysApply: false
+---
+
+If this file is **not named `init.meta.json`** and sits inside a directory
+synced by `$path`, Rojo may skip it unless an **empty `.luau` file with the
+same basename** exists.
+
+```text
+RoundStateChanged.meta.json   ← defines RemoteEvent
+RoundStateChanged.luau        ← must exist, leave EMPTY
+```
+
+*Always* create both the `.meta.json` and `.luau` together. We need both a standalone `.meta.json` file (not just defining it as a child in init.meta.json) and a matching empty `.luau` anchor script with the same basename.

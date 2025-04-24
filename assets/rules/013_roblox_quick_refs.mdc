@@ -1,0 +1,12 @@
+---
+description: pointer to common Roblox / Luau quick-refs to skip MCP tools
+globs: 
+alwaysApply: false
+---
+---
+description: pointer to common Roblox/ Luau quick-refs
+globs: **/*
+alwaysApply: false
+---
+
+Need a reminder on core APIs, data types, functions? → `docs/roblox_quick_refs.md`

@@ -1,0 +1,16 @@
+---
+description: 
+globs: *.client.luau
+alwaysApply: false
+---
+---
+description: Client bootstrap guard – *.client.luau
+globs: **/*.client.luau
+alwaysApply: false
+---
+
+*Runs automatically on the **client**; **cannot** be `require()` by server.*
+
+- Access player with `game.Players.LocalPlayer`.  
+- GUI that scripts will touch must be **created programmatically** (`Instance.new`).  
+- Need a shared API? put it in a `.luau` ModuleScript under ReplicatedStorage.

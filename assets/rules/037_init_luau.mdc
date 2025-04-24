@@ -1,0 +1,17 @@
+---
+description: 
+globs: init.*.luau
+alwaysApply: false
+---
+---
+description: init-script folder transform guard
+globs: **/init.*.luau
+alwaysApply: false
+---
+
+*This file turns its **parent folder** into a Script/ModuleScript.*
+
+- **Only one transform per folder**. Cannot coexist with `init.meta.json`.  
+- For a pure ModuleScript: use **`init.luau`**.  
+- For auto-run server/client scripts: use **`init.server.luau`** or **`init.client.luau`**.  
+- Anything else inside the folder becomes a *child* of that new script.

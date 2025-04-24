@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Rojo file-sync guard
+globs: **/*
+alwaysApply: true
+---
+
+*Rules (full examples → `docs/rojo_file_sync_examples.md`)*
+
+- **Anchor pattern:** any standalone `.meta.json` under a `$path` dir needs an
+  empty `.luau` file with the same basename.
+- One directory ⇒ one transform: pick *either*
+  `init.meta.json` **or** `init*.luau`, never both.
+- Mixing `$path` and same-name virtual child causes duplicates – remove one.
+- Under children`$path`, Rojo auto-creates Folders; use `init.meta.json` only for
+  non-Folder instances.
+- Always use **lowercase** JSON keys and wrap complex types.
+
+See also  
+`mdc:011_default_project_json.mdc` · `docs/default_project_json_faq.md`

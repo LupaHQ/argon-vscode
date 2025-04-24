@@ -8,7 +8,7 @@ import { getCurrentDir, findProjects } from "../util" // Add findProjects import
 import { State } from "../state" // Import State if needed by run signature
 import { Item } from "." // Import Item type from index
 import { writeMcpConfig } from "../mcpConfig"
-import { syncRules } from "../ruleSync"
+import { syncRules, syncDocs } from "../ruleSync"
 
 export const item: Item = {
   label: "$(rocket) Start Lemonade",
@@ -70,6 +70,9 @@ async function ensureCursorSetup(
 
   // Sync rule files
   await syncRules(context)
+
+  // Sync doc files
+  await syncDocs(context)
 
   // Configure MCP server
   await writeMcpConfig()
@@ -198,7 +201,7 @@ export async function run(_state: State, context: vscode.ExtensionContext) {
 
           progress.report({
             increment: 50,
-            message: "Server started, launching Studio...",
+            message: "Server started.",
           })
 
           if (!sessionId || !actualAddress) {
@@ -207,27 +210,10 @@ export async function run(_state: State, context: vscode.ExtensionContext) {
             throw new Error(errorMsg)
           }
 
-          // Directly attempt to launch Studio after server starts
-          try {
-            const studioMessage = `Lemonade server running on ${actualAddress}.`
+          // Studio launch removed - Server is running
+          const serverMessage = `Lemonade server running on ${actualAddress}.`
+          vscode.window.showInformationMessage(serverMessage)
 
-            await argon.studio(false, undefined)
-
-            vscode.window.showInformationMessage(
-              `${studioMessage} Launching Studio...`,
-            )
-          } catch (launchError) {
-            const errorMsg =
-              launchError instanceof Error
-                ? launchError.message
-                : String(launchError)
-            console.error("ERROR launching Roblox Studio:", launchError)
-            logger.error(
-              `Server running on ${actualAddress}, but failed to launch Studio: ${errorMsg}`,
-              false,
-              true,
-            )
-          }
           progress.report({ increment: 100 })
         },
       )
