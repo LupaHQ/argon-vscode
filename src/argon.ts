@@ -297,11 +297,12 @@ export async function plugin(mode: PluginMode): Promise<void> {
 export async function update(mode: UpdateMode, auto?: boolean): Promise<void> {
   const args = ["update", "--mode", mode]
 
-  if (auto) {
-    args.push("--auto")
-  } else {
-    args.push("--force") // Force manual updates
+  // Only add --force for manual updates (when auto is false)
+  if (auto === false) {
+    args.push("--force")
   }
+
+  // For automatic checks (auto is true or undefined), no extra flag is needed.
 
   await spawn(args, { silent: true })
 }

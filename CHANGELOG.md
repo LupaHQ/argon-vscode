@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.27...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.28...HEAD
+
+## [0.0.28] - 2024-07-25
+
+### Fixed
+
+- Fixed automatic update checks which were failing due to passing an invalid `--auto` flag to the `argon update` command. Checks now run without extra flags, while manual updates correctly use `--force`.
 
 ## [0.0.27] - 2024-07-25
 
@@ -145,3 +151,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Removed
 
 [0.0.27]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...0.0.27
+[0.0.28]: https://github.com/LupaHQ/argon-vscode/compare/0.0.27...0.0.28
