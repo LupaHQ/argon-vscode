@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.27...HEAD
+
+## [0.0.27] - 2024-07-25
+
+### Fixed
+
+- Reduced excessive notifications during updates and other background tasks. Logs are now primarily directed to the 'Lemonade' output channel, with only errors triggering visible notifications.
+- Prevented Roblox Studio from automatically launching after the 'Start Lemonade' command completes, respecting the `argon.autoLaunchStudio` and `argon.autoRun` settings.
 
 ## [0.0.26] - 2025-04-27
 
@@ -123,110 +130,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- Use native `argon connect-mcp` command instead of `npx` for Cursor MCP integration, removing Node.js dependency for this feature.
+- Use native `connect-mcp` command to handle MCP SSE connections.
 
-## [0.0.11] - 2025-04-12
+[0.0.12]: https://github.com/LupaHQ/argon-vscode/compare/0.0.11...0.0.12
+
+## [0.0.11] - YYYY-MM-DD
 
 ### Added
 
-- Add `RUST_YES` environment variable support.
-
-## [0.0.10] - 2025-04-14
+### Changed
 
 ### Fixed
 
-- Fixed `argon.ts` update command arguments to use `--mode` flag correctly.
-- Added `vscode` update mode type definition to `argon.ts`.
+### Removed
 
-## [0.0.9] - 2025-04-14
-
-### Added
-
-- Added extension self-update functionality for automatic updates
-- Improved update command to update CLI and plugin components before updating the extension
-
-### Changed
-
-- Modified update process sequence to update CLI and plugins first, then extension
-
-## [0.0.8] - 2025-04-09
-
-### Changed
-
-- Fixed code formatting issues across multiple files
-- Improved code consistency and readability
-
-## [0.0.7] - 2025-04-09
-
-### Fixed
-
-- Fixed Windows installation issue where reg.exe command was not found by using absolute path
-- Added error handling to PATH variable updates for improved reliability across different environments
-
-## [0.0.6] - 2024-04-12
-
-### Added
-
-- New `Update Lemonade` command to manually trigger CLI and plugin updates
-- Added update option to the Lemonade menu for easier access
-
-## [0.0.5] - 2025-04-10
-
-### Fixed
-
-- Made MCP server configuration cross-platform compatible to fix the "spawn npx ENOENT" error on Windows
-- Improved error handling for MCP remote server connections
-- Fixed log clearing when game starts by updating the Roblox client to use the correct log endpoint
-- Fixed project initialization error with "Cannot read properties of undefined (reading 'toString')"
-
-### Changed
-
-- Removed unused `log/game_started` endpoint in favor of a more consolidated approach using the standard log endpoint
-
-## [0.0.4] - 2024-04-09
-
-### Changed
-
-- Updated dependency management and internal configurations
-- Improved compatibility with latest Roblox Studio plugin (0.0.4)
-- Enhanced documentation and developer workflow
-
-## [0.0.3] - 2024-04-09
-
-### Changed
-
-- Renamed Argon visual elements to Lemonade.
-- Updated internal project configuration and dependencies.
-- Fixed directory structure references.
-
-## [0.0.2] - 2025-04-08
-
-## [0.0.1] - 2024-04-08
-
-### Added
-
-- New `Output` command to quickly see Argon output channel
-
-### Changed
-
-- Reset version to 0.0.1 for initial Lemonade release
-- Fixed linting issues in codebase
-- Renamed LemonadeRAG to lemonadeRag for improved ESLint compliance
-
-## [2.0.18] - 2025-02-05
-
-### Added
-
-- Option to disable auto-update of the Argon CLI
-
-## [2.0.17] - 2025-01-26
-
-### Added
-
-- Completion for `rename_instances` setting
-- `Show Output`
-
-[0.0.21]: https://github.com/LupaHQ/argon-vscode/compare/0.0.20...0.0.21
-[0.0.22]: https://github.com/LupaHQ/argon-vscode/compare/0.0.21...0.0.22
-[0.0.23]: https://github.com/LupaHQ/argon-vscode/compare/0.0.22...0.0.23
-[0.0.24]: https://github.com/LupaHQ/argon-vscode/compare/0.0.23...0.0.24
+[0.0.27]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...0.0.27
