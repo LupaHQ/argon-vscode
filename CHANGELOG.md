@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.28...HEAD
+[Unreleased]: https://github.com/LupaHQ/argon-vscode/compare/0.0.29...HEAD
+
+## [0.0.29] - 2024-07-25
+
+### Added
+
+- Suggest installation of the Luau Language Server extension (`JohnnyMorganz.luau-lsp`) on activation if it's not already installed, improving the Luau development experience.
 
 ## [0.0.28] - 2024-07-25
 
@@ -152,3 +158,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 [0.0.27]: https://github.com/LupaHQ/argon-vscode/compare/0.0.26...0.0.27
 [0.0.28]: https://github.com/LupaHQ/argon-vscode/compare/0.0.27...0.0.28
+[0.0.29]: https://github.com/LupaHQ/argon-vscode/compare/0.0.28...0.0.29

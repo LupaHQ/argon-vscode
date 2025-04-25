@@ -1,20 +1,20 @@
-import * as vscode from "vscode"
-import * as commands from "./commands"
-import * as installer from "./installer"
-import * as config from "./config"
-import * as argon from "./argon"
-import * as menu from "./menu"
-import * as completion from "./completion"
-import { updatePathVariable, getVersion } from "./util"
-import { State } from "./state"
-import { RestorableSession } from "./session"
-import { openMenuError } from "./commands/openMenu"
-import * as path from "path"
-import * as fs from "fs"
-import * as https from "https"
-import * as http from "http"
-import * as os from "os"
 import * as childProcess from "child_process"
+import * as fs from "fs"
+import * as http from "http"
+import * as https from "https"
+import * as os from "os"
+import * as path from "path"
+import * as vscode from "vscode"
+import * as argon from "./argon"
+import * as commands from "./commands"
+import { openMenuError } from "./commands/openMenu"
+import * as completion from "./completion"
+import * as config from "./config"
+import * as installer from "./installer"
+import * as menu from "./menu"
+import { RestorableSession } from "./session"
+import { State } from "./state"
+import { getVersion, updatePathVariable } from "./util"
 
 let state: State
 
@@ -291,6 +291,25 @@ export async function activate(context: vscode.ExtensionContext) {
       config.saveGlobalConfig()
     }
   })
+
+  // Check for Luau Language Server
+  const luauLspExtension = vscode.extensions.getExtension(
+    "JohnnyMorganz.luau-lsp",
+  )
+  if (!luauLspExtension) {
+    vscode.window
+      .showInformationMessage(
+        "For enhanced Luau IntelliSense and diagnostics, consider installing the Luau Language Server extension.",
+        "Install Luau LSP",
+      )
+      .then((selection) => {
+        if (selection === "Install Luau LSP") {
+          vscode.env.openExternal(
+            vscode.Uri.parse("vscode:extension/JohnnyMorganz.luau-lsp"),
+          )
+        }
+      })
+  }
 }
 
 export function deactivate() {
