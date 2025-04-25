@@ -295,8 +295,15 @@ export async function plugin(mode: PluginMode): Promise<void> {
 }
 
 export async function update(mode: UpdateMode, auto?: boolean): Promise<void> {
-  // Adding the --force flag to ensure the update is actually applied rather than just checked
-  await spawn(["update", "--mode", mode, "--force"], { silent: auto })
+  const args = ["update", "--mode", mode]
+
+  if (auto) {
+    args.push("--auto")
+  } else {
+    args.push("--force") // Force manual updates
+  }
+
+  await spawn(args, { silent: true })
 }
 
 export function version(): string | undefined {
