@@ -19,8 +19,8 @@ src/
 {
   "className": "stringvalue",
   "properties": {
-    "value": "lobby" // default
-  }
+    "value": "lobby", // default
+  },
 }
 ```
 
@@ -43,8 +43,8 @@ _(No Lua files needed when all you want is the ValueObject itself.)_
   "properties": {
     "size": { "Vector3": [4, 1, 4] },
     "anchored": true,
-    "color": { "Color3": [0.2, 0.6, 1] }
-  }
+    "color": { "Color3": [0.2, 0.6, 1] },
+  },
 }
 ```
 
