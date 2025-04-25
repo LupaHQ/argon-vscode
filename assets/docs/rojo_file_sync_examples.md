@@ -72,4 +72,12 @@ Keep the default mapping unless you _must_ move it.
 
 ---
 
+> ⚠ **Filename rules (all platforms)**
+>
+> - Max 255 chars, non-empty
+> - No `/` or `\` anywhere
+> - On Windows also forbid `* ? < > : " |` and reserved names (`CON`, `NUL`, `COM1`…`COM9`, `LPT1`…`LPT9`).
+
+---
+
 _End of file_

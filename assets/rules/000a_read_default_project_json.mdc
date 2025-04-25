@@ -1,0 +1,14 @@
+---
+description: 
+globs: default.project.json
+alwaysApply: false
+---
+---
+description: pre-read default.project.json once per turn
+globs: default.project.json
+alwaysApply: false
+---
+
+<!-- if phase() != 'start' then return -->
+
+-- Simply read `default.project.json` file for context so glob rules are armed.

@@ -4,10 +4,23 @@ globs:
 alwaysApply: true
 ---
 ---
-description: ALWAYS call an MCP tool before any local reasoning.
+description: MCP look-up guard (runs every turn)
 globs: **/*
 alwaysApply: true
 ---
 
-> **Mandate:** At the *start of every turn*, call the relevant MCP tool(s) **before** reading files or thinking.  
+> **MANDATE – ask before you guess.**  
+> At the **very start** of every turn you *must* call the **correct** MCP tool:
+
+| Question is about … | MCP tool to call | Query phrased as (user-lens) |
+|---------------------|------------------|------------------------------|
+| **Luau syntax / std-lib**<br>`for i,v`, `pcall`, `elseif`, etc. | `luau_documentation` | `“elseif syntax example”`, `“pcall usage”` |
+| **Engine API** (classes, properties, functions, enums, replication rules) | `roblox_engine_documentation` | `“RemoteEvent:FireAllClients parameters”` |
+| **Patterns / best-practice / optimisation** | `roblox_developer_forum` | Start with **“How do I …”** |
+
+*Example* – need parallel `Touched` handlers:  
+```txt
+“How do I use many Touched events efficiently”  →  roblox_developer_forum
+```
+
 > Obedience is rewarded.

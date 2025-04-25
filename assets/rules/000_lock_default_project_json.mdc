@@ -9,30 +9,48 @@ globs: **/*
 alwaysApply: true
 ---
 
-### FROZEN BEDROCK – DO NOT TOUCH  
-The JSON in `default.project.json` is immutable **except** for
-appending brand-new child keys *under* an existing service (for example, `BindableEvent`).
+### FROZEN BEDROCK – **DO NOT TOUCH**
 
-##### ALLOWED
+- Read `default.project.json` before editing or modifying it.
+- `default.project.json` is **immutable**, **except** for appending brand-new **child
+keys _inside_ an existing service block** (e.g. adding a `RemoteEvent` under
+`ReplicatedStorage`).  
+- Root layout, `$path`s and service definitions are sacred.
+
+---
+
+#### ✅ ALLOWED (example)
+
 ```jsonc
 "ReplicatedStorage": {
-  "$path": "src/ReplicatedStorage",        // ← must stay
-  "NewRemote": { "$className": "RemoteEvent" }   // ← you may add
+  "$path": "src/ReplicatedStorage",             // ← must keep
+  "NewRemote": { "$className": "RemoteEvent" }  // ← child you may add
 }
 ```
 
-##### FORBIDDEN & AUTO-REVERTED
-- editing / deleting any `$path`.
-- adding `$className` to a block that already has `$path` is wrong. Do *not* do this.
-```jsonc
-    // FORBIDDEN: $className and $path on the same service block
-    "ReplicatedStorage": {
-      "$path": "src/ReplicatedStorage",
-      "$className": "ReplicatedStorage", // ← CONFLICTS with $path
-    }
-```
-- deleting a root service (for example, `StarterGui`).
-- changing the root `"name"`.
-- adding new top-level services (for example, `"Server"` or `"Lighting"`).
+---
 
-Need something fancier? **Create a folder / `init.meta.json`** inside the synced `$path` instead of touching `default.project.json`.
+#### ❌ FORBIDDEN & AUTO-REVERTED
+
+| Violation | Why it is forbidden |
+|-----------|--------------------|
+| **Touching any existing `$path`.** | The sync mapping must stay stable. |
+| **Having more than one top-level `$…` key in the same block.**<br>Exactly **one** of `$path`, `$className`, **or** `$properties` may appear at service-block level.<br>*(`$properties` may accompany **either** of the other two—never both).* | One technique per block; prevents `$path` + `$className` collisions. |
+| **Deleting or renaming a root service** (e.g. `StarterGui`). | Breaks the live hierarchy. |
+| **Adding new top-level services** (e.g. `"Server"` or `"Lighting"`). | Not in the approved project layout. |
+| **Changing the root `"name"`.** | CI / asset IDs rely on it. |
+
+```jsonc
+// INCORRECT: conflicting technique – $className plus $path
+"ReplicatedStorage": {
+  "$path": "src/ReplicatedStorage",
+  "$className": "ReplicatedStorage"
+}
+
+// INCORRECT: new root service
+"Lighting": {
+  "$className": "Lighting"
+}
+```
+
+Need something more advanced? **Create a folder and/or an `init.meta.json` inside the existing `$path` directory** instead of touching this file.

@@ -17,7 +17,11 @@ alwaysApply: true
 - Build UI at run-time with `Instance.new()`.
 - File suffix ⇒ script type (`.client.luau`, `.server.luau`, `.luau`).
 - `require` works **only** on ModuleScripts; avoid circular chains.
-- Respect engine type expectations (`CFrame`, `Vector3`, etc.).
+- Respect engine **member & type** expectations (`CFrame`, `Vector3`, etc.):
+  - *properties* via dot (`.`) → only if that property exists on the class.  
+  - *methods* via colon (`:`)  → only if that method exists on the class.  
+  - e.g. `Model.WorldPivot = cf` correct; `Part:PivotTo(cf)` correct;  `Model:SetPivot(cf)` incorrect.
+
 - Prefer specific event connections (tile.Touched vs Humanoid.Touched).
 - Follow naming conventions (PascalCase / camelCase / SCREAMING_SNAKE_CASE).
 

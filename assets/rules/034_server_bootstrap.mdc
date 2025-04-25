@@ -13,4 +13,4 @@ alwaysApply: false
 
 - Keep top-level code side-effect-safe (no long loops).  
 - Use services via `game:GetService()`.  
-- If you plan to return a table → rename to `.luau` instead.
+- If you plan to return a table/function → rename to `.luau` instead.
