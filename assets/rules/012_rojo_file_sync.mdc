@@ -15,6 +15,11 @@ alwaysApply: true
   empty `.luau` file with the same basename.
 - One directory ⇒ one transform: pick *either*
   `init.meta.json` **or** `init*.luau`, never both.
+- **UI HARD-BLOCK** `ScreenGui`, `SurfaceGui`, `BillboardGui`, and all other
+  **GuiObject** / **GuiBase** classes **MUST NOT** be declared in any
+  `.meta.json`.  
+  > Build them at programmatically with `Instance.new()` instead.  
+  > **Delete the file** and move the creation into a LocalScript.
 - Mixing `$path` and same-name virtual child causes duplicates – remove one.
 - Under children`$path`, Rojo auto-creates Folders; use `init.meta.json` only for
   non-Folder instances.

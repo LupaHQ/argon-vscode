@@ -11,7 +11,8 @@ alwaysApply: true
 
 *Key rules (details → `docs/master_structure_faq.md`)*
 
-- **Consult** `default.project.json` **before coding**.  
+- **Consult** `default.project.json` **before coding**.
+- Loaded early by `000a_read_default_project.mdc` – the file **must** be read before any code runs.
 - **Do NOT** change root keys or `$path`s – only add children under them.  
 - **Suffix ⇒ instance**:  
 
@@ -25,6 +26,7 @@ alwaysApply: true
 - Avoid circular requires; use parameters or BindableEvents.  
 - Build UI at runtime (`Instance.new`) – never via Rojo folders.  
 - Return exactly **one** value from a ModuleScript; locals stay private.
+- Non-Folder instances under a `$path` directory require `.meta.json` + empty anchor `.luau` (read `012_rojo_file_sync.mdc`).
 
 See also  
 `mdc:020_init_meta_json_best_practices.mdc` · `021_roblox_script_best_practices.mdc` · `docs/roblox_script_patterns.md`

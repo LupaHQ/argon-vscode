@@ -12,7 +12,7 @@ _(supplement for rules 001a-c)_
 | **001b_wrap_execution**      | _(none)_                                      | Decide follow-up work and, if needed, call **any** MCP tool you deem relevant. |
 | **001c_guarantee_integrity** | _(none)_                                      | Final sanity pass before Cursor returns.                                       |
 
-Only rule 001a is phase-guarded; the other two are < 50 lines and cheap to run.
+Only rule 001a is phase-guarded;
 
 ---
 
@@ -24,11 +24,11 @@ Only rule 001a is phase-guarded; the other two are < 50 lines and cheap to run.
 4. **Scan** `lemonlogs.txt` for `WARN`, `ERROR`, or patterns below.
 5. **For each hit,** decide whether an MCP lookup helps:
 
-   | Log cue                             | MCP tool to call              | What you’re looking for                              |
-   | ----------------------------------- | ----------------------------- | ---------------------------------------------------- |
-   | `syntax error`, `unexpected symbol` | `luau_documentation`          | Correct grammar / keyword usage.                     |
-   | `unknown property`, `invalid arg`   | `roblox_engine_documentation` | Correct class/property names and value types.        |
-   | `how do i`, `any idea`, vague notes | `roblox_developer_forum`      | Community work-arounds or best-practice discussions. |
+| Log cue / dev note                                 | MCP tool                      | **User-lens query** example                           |
+| -------------------------------------------------- | ----------------------------- | ----------------------------------------------------- |
+| `syntax error`, `unexpected symbol`                | `luau_documentation`          | “elseif syntax example”, “for-loop grammar”           |
+| `unknown property`, `invalid arg`, `Enum.*` issues | `roblox_engine_documentation` | “Humanoid:MoveTo parameters”, “Enum.Material members” |
+| “how do I …”, “any idea”, performance or patterns  | `roblox_developer_forum`      | “How do I handle many Touched events efficiently”     |
 
 6. **Patch** only the affected file(s) based on what you learned.
 7. Hand off to **001c_guarantee_integrity**.

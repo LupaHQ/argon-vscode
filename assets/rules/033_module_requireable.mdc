@@ -10,8 +10,9 @@ alwaysApply: false
 ---
 
 *Skip* if filename ends with `.server.luau` or `.client.luau` — those have their own rules.
+
 *This file is a **ModuleScript** (`.luau` ⇒ ModuleScript).*
 
-- Return **exactly one** value (table / function).  
-- Safe to `require()` from server **or** client.  
-- If you need auto-run behaviour, rename to `.server.luau` or `.client.luau`.
+- Return **exactly one** value (table / function).
+- Safe to `require()` from server **or** client.
+- If you need auto-run behaviour, rename to `.server.luau` or `.client.luau`. This is the only way to change run-context.

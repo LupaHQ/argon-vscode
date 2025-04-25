@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 ---
 description: default.project.json guard & pointers
-globs: default.project.json
+globs: **/*
 alwaysApply: true
 ---
 

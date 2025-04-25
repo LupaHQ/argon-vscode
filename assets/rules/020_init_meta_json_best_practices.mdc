@@ -18,5 +18,8 @@ alwaysApply: true
 * **Attributes can’t store functions** — use ModuleScripts or BindableEvents for cross-script APIs.  
 * **Directory transform rule** — place init.meta.json **inside** the folder you want turned into an Instance.  
 * **Anchor caution** — if a .meta.json sits under a children $path directory, add an empty .luau file with the same basename so Rojo reliably syncs it.
+* **No GUI classes** — `ScreenGui`, `TextLabel`, etc. may **not** be created
+  via `init.meta.json`; spawn them in code.  (Rojo turns GUI folders into
+  `Folder`, breaking scripts.)
 
 More worked examples → mdc:docs/init_meta_json_examples.md
