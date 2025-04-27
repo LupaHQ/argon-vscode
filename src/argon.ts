@@ -51,7 +51,7 @@ async function spawn(
 
   const spawnOptions: childProcess.SpawnOptionsWithoutStdio = {
     cwd: getCurrentDir(),
-    shell: true,
+    shell: false,
     env: { ...process.env, rustLog: config.verbose() ? "trace" : "info" },
   }
 
